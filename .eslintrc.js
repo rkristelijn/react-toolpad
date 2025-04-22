@@ -11,6 +11,8 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -20,7 +22,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier', '@rkristelijn/mui'],
+  plugins: ['react', '@typescript-eslint', 'prettier', '@rkristelijn/mui', 'import'],
   rules: {
     'no-var': 'error',
     'no-console': 'warn',
@@ -39,15 +41,33 @@ module.exports = {
         message: 'Use named imports instead of React namespace, e.g., import { FC } from "react" instead of React.FC',
       },
     ],
-    'sort-imports': [
+    'sort-imports': 'off',
+    'import/order': [
       'error',
       {
-        ignoreCase: false,
-        ignoreDeclarationSort: true,
-        ignoreMemberSort: false,
-        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-        allowSeparatedGroups: true,
-      },
+        'groups': [
+          'builtin',
+          'external',
+          'internal',
+          ['parent', 'sibling'],
+          'index',
+          'object',
+          'type'
+        ],
+        'pathGroups': [
+          {
+            'pattern': '@mui/**',
+            'group': 'external',
+            'position': 'after'
+          }
+        ],
+        'pathGroupsExcludedImportTypes': ['@mui/**'],
+        'newlines-between': 'always',
+        'alphabetize': {
+          'order': 'asc',
+          'caseInsensitive': true
+        }
+      }
     ],
     '@rkristelijn/mui/sort-sx-keys': 'error',
     '@rkristelijn/mui/prefer-named-imports': 'error',
@@ -59,6 +79,9 @@ module.exports = {
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/resolver': {
+      typescript: {},
     },
   },
 };
