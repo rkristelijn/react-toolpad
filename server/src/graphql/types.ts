@@ -37,4 +37,4 @@ export interface UpdateOrderInput {
     productId: string;
     quantity: number;
   }>;
-} 
+}

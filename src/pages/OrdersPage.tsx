@@ -1,52 +1,37 @@
-import { useState } from 'react';
+import { useApolloClient } from '@apollo/client';
+import { Refresh } from '@mui/icons-material';
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import { useOrders, useUpdateOrder, useDeleteOrder } from '../services/orderService';
 
-interface Order {
-  id: string;
-  customer: string;
-  date: string;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
-  total: number;
-}
+import type { Order } from '../services/types';
 
 export default function OrderPage() {
-  const [orders] = useState<Order[]>([
-    {
-      id: 'ORD001',
-      customer: 'John Doe',
-      date: '2024-03-15',
-      status: 'pending',
-      total: 299.99,
-    },
-    {
-      id: 'ORD002',
-      customer: 'Jane Smith',
-      date: '2024-03-14',
-      status: 'completed',
-      total: 199.99,
-    },
-    {
-      id: 'ORD003',
-      customer: 'Bob Johnson',
-      date: '2024-03-13',
-      status: 'processing',
-      total: 499.99,
-    },
-  ]);
+  const { orders, loading, error } = useOrders();
+  const { updateOrder } = useUpdateOrder();
+  const { deleteOrder } = useDeleteOrder();
+  const client = useApolloClient();
 
-  const getStatusColor = (status: Order['status']) => {
-    switch (status) {
+  const handleRefresh = async () => {
+    await client.resetStore(); // This clears the cache and refetches all active queries
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
       case 'pending':
         return 'warning.main';
       case 'processing':
@@ -60,15 +45,54 @@ export default function OrderPage() {
     }
   };
 
+  const handleCancelOrder = async (orderId: string) => {
+    try {
+      await updateOrder(orderId, { status: 'cancelled' });
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to cancel order:', err);
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      await deleteOrder(orderId);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to delete order:', err);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ p: 2 }}>
+        <Alert severity='error'>Error loading orders: {error.message}</Alert>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={3}>
         <Grid size={{ xs: 12 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
             <Typography variant='h4'>Orders</Typography>
-            <Button variant='contained' color='primary'>
-              New Order
-            </Button>
+            <Box>
+              <Button variant='outlined' startIcon={<Refresh />} onClick={handleRefresh} sx={{ mr: 1 }}>
+                Refresh
+              </Button>
+              <Button variant='contained' color='primary'>
+                New Order
+              </Button>
+            </Box>
           </Box>
         </Grid>
         <Grid size={{ xs: 12 }}>
@@ -86,11 +110,11 @@ export default function OrderPage() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {orders.map((order) => (
+                  {orders.map((order: Order) => (
                     <TableRow key={order.id}>
                       <TableCell>{order.id}</TableCell>
-                      <TableCell>{order.customer}</TableCell>
-                      <TableCell>{order.date}</TableCell>
+                      <TableCell>{order.customerName}</TableCell>
+                      <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <Typography
                           sx={{
@@ -106,8 +130,13 @@ export default function OrderPage() {
                         <Button size='small' sx={{ mr: 1 }}>
                           View
                         </Button>
-                        <Button size='small' color='error'>
-                          Cancel
+                        {order.status !== 'cancelled' && (
+                          <Button size='small' color='error' onClick={() => handleCancelOrder(order.id)} sx={{ mr: 1 }}>
+                            Cancel
+                          </Button>
+                        )}
+                        <Button size='small' color='error' onClick={() => handleDeleteOrder(order.id)}>
+                          Delete
                         </Button>
                       </TableCell>
                     </TableRow>

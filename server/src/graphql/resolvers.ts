@@ -1,5 +1,6 @@
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+
 import { Order, Product, CreateOrderInput, UpdateOrderInput } from './types';
 
 const API_URL = 'http://localhost:3001';
@@ -27,10 +28,16 @@ export const resolvers = {
     createOrder: async (_: unknown, { input }: { input: CreateOrderInput }): Promise<Order> => {
       const order = {
         id: uuidv4(),
+        customerName: input.customerName,
         orderDate: new Date().toISOString(),
         status: 'pending',
-        total: 0, // Will be calculated based on items
-        ...input,
+        total: 0,
+        items: input.items.map(item => ({
+          id: uuidv4(),
+          productId: item.productId,
+          quantity: item.quantity,
+          price: 0, // Will be updated when we fetch the product
+        })),
       };
       const response = await axios.post(`${API_URL}/api/orders`, order);
       return response.data;
@@ -46,13 +53,18 @@ export const resolvers = {
   },
   Order: {
     items: async (order: Order) => {
-      return Promise.all(order.items.map(async (item) => {
-        const product = await axios.get(`${API_URL}/api/products/${item.productId}`);
-        return {
-          ...item,
-          product: product.data,
-        };
-      }));
+      return Promise.all(
+        order.items.map(async item => {
+          const product = await axios.get(`${API_URL}/api/products/${item.productId}`);
+          return {
+            id: item.id || uuidv4(), // Ensure ID exists
+            productId: item.productId,
+            quantity: item.quantity,
+            price: item.price || product.data.price,
+            product: product.data,
+          };
+        })
+      );
     },
   },
-}; 
+};

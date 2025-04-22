@@ -1,12 +1,11 @@
 // React and React Router
 
-// Third-party libraries
-
 // Internal imports
+import { Dashboard, Home, ShoppingCart } from '@mui/icons-material';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { Outlet } from 'react-router-dom';
 
-import { Dashboard, Home, ShoppingCart } from '@mui/icons-material';
+import { ApolloProvider } from './providers/ApolloProvider';
 
 import type { Navigation } from '@toolpad/core';
 
@@ -38,8 +37,10 @@ const BRANDING = {
 
 export default function App() {
   return (
-    <ReactRouterAppProvider navigation={NAVIGATION} branding={BRANDING}>
-      <Outlet />
-    </ReactRouterAppProvider>
+    <ApolloProvider>
+      <ReactRouterAppProvider navigation={NAVIGATION} branding={BRANDING}>
+        <Outlet />
+      </ReactRouterAppProvider>
+    </ApolloProvider>
   );
 }

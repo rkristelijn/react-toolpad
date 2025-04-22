@@ -53,4 +53,4 @@ export const typeDefs = gql`
     productId: ID!
     quantity: Int!
   }
-`; 
+`;

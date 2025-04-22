@@ -1,9 +1,14 @@
-import express from 'express';
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-named-as-default-member */
+
 import { ApolloServer } from 'apollo-server-express';
-import jsonServer from 'json-server';
 import cors from 'cors';
-import { typeDefs } from './graphql/schema';
+import express from 'express';
+import jsonServer from 'json-server';
+
 import { resolvers } from './graphql/resolvers';
+import { typeDefs } from './graphql/schema';
 
 const app = express();
 const jsonServerRouter = jsonServer.router('server/db.json');
@@ -20,7 +25,7 @@ app.use('/api', jsonServerRouter);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  formatError: (error) => {
+  formatError: error => {
     console.error('GraphQL Error:', error);
     return {
       message: error.message,
@@ -32,12 +37,12 @@ const server = new ApolloServer({
 async function startServer() {
   try {
     await server.start();
-    
+
     // Apply middleware with type assertion
-    server.applyMiddleware({ 
-      app: app as any, 
+    server.applyMiddleware({
+      app: app as any,
       path: '/graphql',
-      cors: false // We're handling CORS with the express middleware
+      cors: false, // We're handling CORS with the express middleware
     });
 
     const PORT = process.env.PORT || 3001;
@@ -52,7 +57,7 @@ async function startServer() {
   }
 }
 
-startServer().catch((err) => {
+startServer().catch(err => {
   console.error('Error starting server:', err);
   process.exit(1);
-}); 
+});
