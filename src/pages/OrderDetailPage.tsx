@@ -31,7 +31,10 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
-      <PageContainer>
+      <PageContainer
+        title='Order Details'
+        breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Orders', path: '/orders' }, { title: 'Order Details' }]}
+      >
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
           <CircularProgress />
         </Box>
@@ -41,7 +44,10 @@ export default function OrderDetailPage() {
 
   if (error) {
     return (
-      <PageContainer>
+      <PageContainer
+        title='Order Details'
+        breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Orders', path: '/orders' }, { title: 'Order Details' }]}
+      >
         <Box sx={{ p: 2 }}>
           <Alert severity='error'>Error loading order: {error.message}</Alert>
         </Box>
@@ -51,7 +57,10 @@ export default function OrderDetailPage() {
 
   if (!order) {
     return (
-      <PageContainer>
+      <PageContainer
+        title='Order Details'
+        breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Orders', path: '/orders' }, { title: 'Order Details' }]}
+      >
         <Box sx={{ p: 2 }}>
           <Alert severity='warning'>Order not found</Alert>
         </Box>
@@ -60,16 +69,10 @@ export default function OrderDetailPage() {
   }
 
   return (
-    <PageContainer>
-      <Box sx={{ mb: 3, px: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <IconButton onClick={handleBack} sx={{ mr: 2 }}>
-            <ArrowBack />
-          </IconButton>
-          <Typography variant='h4'>Order Details</Typography>
-        </Box>
-      </Box>
-
+    <PageContainer
+      title={`Order #${order.id}`}
+      breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Orders', path: '/orders' }, { title: `Order #${order.id}` }]}
+    >
       <Box sx={{ p: 2 }}>
         <Paper sx={{ mb: 2, p: 2 }}>
           <Typography variant='h6' gutterBottom>

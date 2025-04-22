@@ -23,13 +23,17 @@ import { useOrders, useUpdateOrder, useDeleteOrder } from '../services/orderServ
 import type { Order } from '../services/types';
 
 export default function OrderPage() {
-  const { orders, loading, error } = useOrders();
+  const { orders, loading, error, refetch } = useOrders();
   const { updateOrder } = useUpdateOrder();
   const { deleteOrder } = useDeleteOrder();
   const client = useApolloClient();
 
   const handleRefresh = async () => {
-    await client.resetStore(); // This clears the cache and refetches all active queries
+    try {
+      await refetch();
+    } catch (err) {
+      console.error('Failed to refresh orders:', err);
+    }
   };
 
   const getStatusColor = (status: string) => {

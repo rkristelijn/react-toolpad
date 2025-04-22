@@ -75,11 +75,12 @@ const DELETE_ORDER = gql`
 
 // Custom hooks for orders
 export function useOrders() {
-  const { data, loading, error } = useQuery(GET_ORDERS);
+  const { data, loading, error, refetch } = useQuery(GET_ORDERS);
   return {
     orders: data?.orders || [],
     loading,
     error,
+    refetch,
   };
 }
 
