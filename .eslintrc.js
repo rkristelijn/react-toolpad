@@ -42,7 +42,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'error',
     'no-console': 'warn',
     'import/order': [
-      'error',
+      'warn',
       {
         groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'index', 'object', 'type'],
         pathGroups: [

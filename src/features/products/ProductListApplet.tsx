@@ -1,4 +1,5 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
@@ -44,7 +45,11 @@ export default function ProductListApplet({ className, sx, onSelectProduct, sele
               hover
               sx={{ cursor: 'pointer' }}
             >
-              <TableCell>{product.id}</TableCell>
+              <TableCell>
+                <Link component={RouterLink} to={`/products/${product.id}`} color='primary'>
+                  {product.id}
+                </Link>
+              </TableCell>
               <TableCell>
                 <Typography variant='body1' component='div'>
                   {product.name}
