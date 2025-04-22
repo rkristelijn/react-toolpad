@@ -39,6 +39,16 @@ module.exports = {
         message: 'Use named imports instead of React namespace, e.g., import { FC } from "react" instead of React.FC',
       },
     ],
+    'sort-imports': [
+      'error',
+      {
+        ignoreCase: false,
+        ignoreDeclarationSort: true,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
+        allowSeparatedGroups: true,
+      },
+    ],
     '@rkristelijn/mui/sort-sx-keys': 'error',
     '@rkristelijn/mui/prefer-named-imports': 'error',
     '@rkristelijn/mui/no-literal-colors': 'error',

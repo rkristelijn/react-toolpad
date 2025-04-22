@@ -1,7 +1,14 @@
-import { Outlet } from 'react-router-dom';
+// React and React Router
+
+// Third-party libraries
+import { Dashboard, Home, ShoppingCart } from '@mui/icons-material';
+
+// Internal imports
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
+import { Outlet } from 'react-router-dom';
+
 import type { Navigation } from '@toolpad/core';
-import { Home, Dashboard, ShoppingCart } from '@mui/icons-material';
+
 // Define navigation
 const NAVIGATION: Navigation = [
   {
