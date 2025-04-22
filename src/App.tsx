@@ -1,35 +1,31 @@
-import React from "react";
-import { Outlet } from "react-router-dom";
-import { ReactRouterAppProvider } from "@toolpad/core/react-router";
-import type { Navigation } from "@toolpad/core";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-
+import { Outlet } from 'react-router-dom';
+import { ReactRouterAppProvider } from '@toolpad/core/react-router';
+import type { Navigation } from '@toolpad/core';
+import { Home, Dashboard, ShoppingCart } from '@mui/icons-material';
 // Define navigation
 const NAVIGATION: Navigation = [
   {
-    kind: "header",
-    title: "Main Menu",
+    kind: 'header',
+    title: 'Main Menu',
   },
   {
-    title: "Home",
-    icon: <HomeIcon />,
+    title: 'Home',
+    icon: <Home />,
   },
   {
-    segment: "dashboard",
-    title: "Dashboard",
-    icon: <DashboardIcon />,
+    segment: 'dashboard',
+    title: 'Dashboard',
+    icon: <Dashboard />,
   },
   {
-    segment: "orders",
-    title: "Orders",
-    icon: <ShoppingCartIcon />,
+    segment: 'orders',
+    title: 'Orders',
+    icon: <ShoppingCart />,
   },
 ];
 
 const BRANDING = {
-  title: "My Toolpad App",
+  title: 'My Toolpad App',
 };
 
 export default function App() {

@@ -1,9 +1,9 @@
-import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
-import DashboardLayout from "./layouts/Layout";
-import HomePage from "./pages/HomePage";
-import DashboardPage from "./pages/DashboardPage";
-import OrdersPage from "./pages/OrdersPage";
+import { createBrowserRouter } from 'react-router-dom';
+import App from './App';
+import DashboardLayout from './layouts/Layout';
+import HomePage from './pages/HomePage';
+import DashboardPage from './pages/DashboardPage';
+import OrdersPage from './pages/OrdersPage';
 
 const router = createBrowserRouter([
   {
@@ -12,19 +12,19 @@ const router = createBrowserRouter([
     children: [
       {
         // Dashboard layout route
-        path: "/",
+        path: '/',
         Component: DashboardLayout,
         children: [
           {
-            path: "/",
+            path: '/',
             Component: HomePage,
           },
           {
-            path: "/dashboard",
+            path: '/dashboard',
             Component: DashboardPage,
           },
           {
-            path: "/orders",
+            path: '/orders',
             Component: OrdersPage,
           },
         ],
