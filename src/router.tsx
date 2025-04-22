@@ -4,6 +4,7 @@ import App from './App';
 import DashboardLayout from './layouts/Layout';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
+import OrderDetailPage from './pages/OrderDetailPage';
 import OrdersPage from './pages/OrdersPage';
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
           {
             path: '/orders',
             Component: OrdersPage,
+          },
+          {
+            path: '/orders/:orderId',
+            Component: OrderDetailPage,
           },
         ],
       },

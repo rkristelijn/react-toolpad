@@ -6,6 +6,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -15,6 +16,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { useOrders, useUpdateOrder, useDeleteOrder } from '../services/orderService';
 
@@ -112,7 +114,11 @@ export default function OrderPage() {
                 <TableBody>
                   {orders.map((order: Order) => (
                     <TableRow key={order.id}>
-                      <TableCell>{order.id}</TableCell>
+                      <TableCell>
+                        <Link component={RouterLink} to={`/orders/${order.id}`} color='primary'>
+                          {order.id}
+                        </Link>
+                      </TableCell>
                       <TableCell>{order.customerName}</TableCell>
                       <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                       <TableCell>
@@ -127,9 +133,6 @@ export default function OrderPage() {
                       </TableCell>
                       <TableCell align='right'>${order.total.toFixed(2)}</TableCell>
                       <TableCell align='right'>
-                        <Button size='small' sx={{ mr: 1 }}>
-                          View
-                        </Button>
                         {order.status !== 'cancelled' && (
                           <Button size='small' color='error' onClick={() => handleCancelOrder(order.id)} sx={{ mr: 1 }}>
                             Cancel

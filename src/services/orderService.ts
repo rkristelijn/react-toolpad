@@ -1,7 +1,9 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
+import type { Order, UpdateOrderInput } from './types';
+
 // GraphQL Queries and Mutations
-export const ORDERS_QUERY = gql`
+const GET_ORDERS = gql`
   query GetOrders {
     orders {
       id
@@ -14,6 +16,7 @@ export const ORDERS_QUERY = gql`
         quantity
         price
         product {
+          id
           name
           price
         }
@@ -22,7 +25,7 @@ export const ORDERS_QUERY = gql`
   }
 `;
 
-export const ORDER_QUERY = gql`
+const GET_ORDER = gql`
   query GetOrder($id: ID!) {
     order(id: $id) {
       id
@@ -35,6 +38,7 @@ export const ORDER_QUERY = gql`
         quantity
         price
         product {
+          id
           name
           price
         }
@@ -43,7 +47,7 @@ export const ORDER_QUERY = gql`
   }
 `;
 
-export const CREATE_ORDER = gql`
+const CREATE_ORDER = gql`
   mutation CreateOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
       id
@@ -54,7 +58,7 @@ export const CREATE_ORDER = gql`
   }
 `;
 
-export const UPDATE_ORDER = gql`
+const UPDATE_ORDER = gql`
   mutation UpdateOrder($id: ID!, $input: UpdateOrderInput!) {
     updateOrder(id: $id, input: $input) {
       id
@@ -63,7 +67,7 @@ export const UPDATE_ORDER = gql`
   }
 `;
 
-export const DELETE_ORDER = gql`
+const DELETE_ORDER = gql`
   mutation DeleteOrder($id: ID!) {
     deleteOrder(id: $id)
   }
@@ -71,18 +75,18 @@ export const DELETE_ORDER = gql`
 
 // Custom hooks for orders
 export function useOrders() {
-  const { data, loading, error, refetch } = useQuery(ORDERS_QUERY);
+  const { data, loading, error } = useQuery(GET_ORDERS);
   return {
     orders: data?.orders || [],
     loading,
     error,
-    refetch,
   };
 }
 
 export function useOrder(id: string) {
-  const { data, loading, error } = useQuery(ORDER_QUERY, {
+  const { data, loading, error } = useQuery(GET_ORDER, {
     variables: { id },
+    skip: !id,
   });
   return {
     order: data?.order,
@@ -93,7 +97,7 @@ export function useOrder(id: string) {
 
 export function useCreateOrder() {
   const [createOrder, { loading }] = useMutation(CREATE_ORDER, {
-    refetchQueries: [{ query: ORDERS_QUERY }],
+    refetchQueries: [{ query: GET_ORDERS }],
   });
 
   return {
@@ -104,23 +108,29 @@ export function useCreateOrder() {
 }
 
 export function useUpdateOrder() {
-  const [updateOrder, { loading }] = useMutation(UPDATE_ORDER, {
-    refetchQueries: [{ query: ORDERS_QUERY }],
+  const [updateOrderMutation] = useMutation(UPDATE_ORDER, {
+    refetchQueries: ['GetOrders', 'GetOrder'],
   });
 
-  return {
-    updateOrder: (id: string, input: { status?: string; customerName?: string }) => updateOrder({ variables: { id, input } }),
-    loading,
+  const updateOrder = async (id: string, input: UpdateOrderInput) => {
+    await updateOrderMutation({
+      variables: { id, input },
+    });
   };
+
+  return { updateOrder };
 }
 
 export function useDeleteOrder() {
-  const [deleteOrder, { loading }] = useMutation(DELETE_ORDER, {
-    refetchQueries: [{ query: ORDERS_QUERY }],
+  const [deleteOrderMutation] = useMutation(DELETE_ORDER, {
+    refetchQueries: ['GetOrders'],
   });
 
-  return {
-    deleteOrder: (id: string) => deleteOrder({ variables: { id } }),
-    loading,
+  const deleteOrder = async (id: string) => {
+    await deleteOrderMutation({
+      variables: { id },
+    });
   };
+
+  return { deleteOrder };
 }
