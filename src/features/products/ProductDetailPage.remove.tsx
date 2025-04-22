@@ -1,17 +1,11 @@
-import { ArrowBack } from '@mui/icons-material';
-import { Box, IconButton } from '@mui/material';
+import { Box } from '@mui/material';
 import { PageContainer } from '@toolpad/core/PageContainer';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import ProductDetailApplet from './ProductDetailApplet';
 
 export default function ProductDetailPage() {
-  const navigate = useNavigate();
   const { productId } = useParams<{ productId: string }>();
-
-  const handleBack = () => {
-    navigate('/products');
-  };
 
   return (
     <PageContainer

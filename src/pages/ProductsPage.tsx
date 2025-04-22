@@ -1,11 +1,11 @@
 import { PageContainer } from '@toolpad/core';
 
-import ProductsListPage from 'features/products/ProductsListPage';
+import ProductsListView from 'features/products/ProductsListView';
 
 export default function ProductsPage() {
   return (
     <PageContainer title='Products' breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Products' }]}>
-      <ProductsListPage />
+      <ProductsListView />
     </PageContainer>
   );
 }

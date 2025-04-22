@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import App from './App';
-import ProductDetailPage from './features/products/ProductDetailPage';
-import ProductsPage from './features/products/ProductsListPage';
+import OrderDetailView from './features/orders/OrderDetailView';
+import OrdersListView from './features/orders/OrdersListView';
+import ProductDetailView from './features/products/ProductDetailView';
+import ProductsListView from './features/products/ProductsListView';
 import DashboardLayout from './layouts/Layout';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
-import OrderDetailPage from './pages/OrderDetailPage';
-import OrdersPage from './pages/OrdersPage';
 
 const router = createBrowserRouter([
   {
@@ -29,19 +29,19 @@ const router = createBrowserRouter([
           },
           {
             path: '/orders',
-            Component: OrdersPage,
+            Component: OrdersListView,
           },
           {
             path: '/orders/:orderId',
-            Component: OrderDetailPage,
+            Component: OrderDetailView,
           },
           {
             path: '/products',
-            Component: ProductsPage,
+            Component: ProductsListView,
           },
           {
             path: '/products/:productId',
-            Component: ProductDetailPage,
+            Component: ProductDetailView,
           },
         ],
       },
