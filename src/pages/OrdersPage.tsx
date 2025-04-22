@@ -20,7 +20,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 import { useOrders, useUpdateOrder, useDeleteOrder } from '../features/orders/order-service';
 
-import type { Order } from '../services/types';
+import type { Order } from '../../shared/types';
 
 export default function OrderPage() {
   const { orders, loading, error, refetch } = useOrders();

@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 
-import type { Product, ProductInput } from './types';
+import type { Product, ProductInput } from '../../../shared/types';
 
 export const GET_PRODUCTS = gql`
   query GetProducts {

@@ -18,7 +18,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useOrder } from '../features/orders/order-service';
 
-import type { OrderItem } from '../services/types';
+import type { OrderItem } from '../../shared/types';
 
 export default function OrderDetailPage() {
   const navigate = useNavigate();

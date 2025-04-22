@@ -3,8 +3,7 @@ import { useState } from 'react';
 
 import ProductDetailApplet from './ProductDetailApplet';
 import ProductListApplet from './ProductListApplet';
-
-import type { Product } from './types';
+import type { Product } from '../../../shared/types';
 
 export default function ProductsListPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Order, Product, CreateOrderInput, UpdateOrderInput } from './types';
+import { Order, Product, CreateOrderInput, UpdateOrderInput } from '../../../shared/types';
 
 const API_URL = 'http://localhost:3001';
 

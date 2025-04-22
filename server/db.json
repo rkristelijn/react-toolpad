@@ -1,39 +1,39 @@
 {
   "products": [
     {
-      "id": "1",
-      "name": "Laptop Pro X1",
+      "id": "101",
+      "name": "Premium Laptop",
       "description": "High-performance laptop for professionals",
       "price": 1299.99,
       "stock": 50
     },
     {
-      "id": "2",
-      "name": "Wireless Mouse M3",
-      "description": "Ergonomic wireless mouse with long battery life",
-      "price": 49.99,
-      "stock": 200
+      "id": "102",
+      "name": "Wireless Headphones",
+      "description": "Premium wireless headphones with noise cancellation",
+      "price": 199.99,
+      "stock": 100
     },
     {
-      "id": "3",
-      "name": "Ultra HD Monitor 27\"",
-      "description": "4K resolution monitor with HDR support",
+      "id": "103",
+      "name": "Smartwatch",
+      "description": "Advanced smartwatch with health tracking",
+      "price": 299.99,
+      "stock": 75
+    },
+    {
+      "id": "104",
+      "name": "4K Monitor",
+      "description": "Ultra HD monitor with HDR support",
       "price": 499.99,
       "stock": 30
     },
     {
-      "id": "4",
-      "name": "Mechanical Keyboard K7",
-      "description": "RGB mechanical keyboard with custom switches",
-      "price": 129.99,
-      "stock": 75
-    },
-    {
-      "id": "5",
-      "name": "USB-C Dock Station",
-      "description": "12-in-1 docking station with power delivery",
-      "price": 199.99,
-      "stock": 45
+      "id": "105",
+      "name": "Wireless Mouse",
+      "description": "Ergonomic wireless mouse with long battery life",
+      "price": 79.99,
+      "stock": 200
     }
   ],
   "orders": [
@@ -477,6 +477,36 @@
             "name": "Wireless Mouse",
             "price": 79.99
           }
+        }
+      ]
+    },
+    {
+      "id": "e1a98e53-a317-4dc2-b7e5-09a5188eae9f",
+      "customerName": "Bob Smith",
+      "orderDate": "2025-04-22T17:34:09.354Z",
+      "status": "pending",
+      "total": 0,
+      "items": [
+        {
+          "id": "d28cd504-b297-4901-b288-973878b26833",
+          "productId": "101",
+          "quantity": 1,
+          "price": 0
+        }
+      ]
+    },
+    {
+      "id": "d81207a6-60ae-49a1-a100-54ef5d911c4e",
+      "customerName": "Bob Smith",
+      "orderDate": "2025-04-22T17:34:28.772Z",
+      "status": "pending",
+      "total": 0,
+      "items": [
+        {
+          "id": "7a3e35ce-dc77-484b-88c9-224fd1b02d60",
+          "productId": "101",
+          "quantity": 1,
+          "price": 0
         }
       ]
     }
