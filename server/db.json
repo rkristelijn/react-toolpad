@@ -1,39 +1,39 @@
 {
   "products": [
     {
-      "id": "101",
-      "name": "Premium Laptop",
+      "id": "1",
+      "name": "Laptop Pro X1",
+      "description": "High-performance laptop for professionals",
       "price": 1299.99,
-      "description": "High-performance laptop with latest specifications",
-      "imageUrl": "https://example.com/laptop.jpg"
+      "stock": 50
     },
     {
-      "id": "102",
-      "name": "Wireless Headphones",
-      "price": 199.99,
-      "description": "Noise-cancelling wireless headphones",
-      "imageUrl": "https://example.com/headphones.jpg"
+      "id": "2",
+      "name": "Wireless Mouse M3",
+      "description": "Ergonomic wireless mouse with long battery life",
+      "price": 49.99,
+      "stock": 200
     },
     {
-      "id": "103",
-      "name": "Smartwatch",
-      "price": 299.99,
-      "description": "Advanced fitness tracking smartwatch",
-      "imageUrl": "https://example.com/smartwatch.jpg"
-    },
-    {
-      "id": "104",
-      "name": "4K Monitor",
+      "id": "3",
+      "name": "Ultra HD Monitor 27\"",
+      "description": "4K resolution monitor with HDR support",
       "price": 499.99,
-      "description": "32-inch 4K Ultra HD Monitor",
-      "imageUrl": "https://example.com/monitor.jpg"
+      "stock": 30
     },
     {
-      "id": "105",
-      "name": "Wireless Mouse",
-      "price": 79.99,
-      "description": "Ergonomic wireless mouse",
-      "imageUrl": "https://example.com/mouse.jpg"
+      "id": "4",
+      "name": "Mechanical Keyboard K7",
+      "description": "RGB mechanical keyboard with custom switches",
+      "price": 129.99,
+      "stock": 75
+    },
+    {
+      "id": "5",
+      "name": "USB-C Dock Station",
+      "description": "12-in-1 docking station with power delivery",
+      "price": 199.99,
+      "stock": 45
     }
   ],
   "orders": [

@@ -23,6 +23,7 @@ export const typeDefs = gql`
     name: String!
     price: Float!
     description: String
+    stock: Int
   }
 
   type Query {

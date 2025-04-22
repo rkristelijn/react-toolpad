@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { useOrders, useUpdateOrder, useDeleteOrder } from '../services/orderService';
+import { useOrders, useUpdateOrder, useDeleteOrder } from '../features/orders/order-service';
 
 import type { Order } from '../services/types';
 

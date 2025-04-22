@@ -16,7 +16,7 @@ import {
 import { PageContainer } from '@toolpad/core/PageContainer';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { useOrder } from '../services/orderService';
+import { useOrder } from '../features/orders/order-service';
 
 import type { OrderItem } from '../services/types';
 

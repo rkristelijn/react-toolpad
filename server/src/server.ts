@@ -19,6 +19,8 @@ app.use(cors());
 
 // Use json-server middlewares
 app.use(jsonServerMiddlewares);
+
+// Mount json-server router at /api
 app.use('/api', jsonServerRouter);
 
 // Create Apollo Server

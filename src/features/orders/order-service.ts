@@ -1,6 +1,6 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
-import type { Order, UpdateOrderInput } from './types';
+import type { UpdateOrderInput } from '../../services/types';
 
 // GraphQL Queries and Mutations
 const GET_ORDERS = gql`
