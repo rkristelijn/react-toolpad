@@ -1,5 +1,7 @@
 # Detailed documentation for this repo
 
+This document describes how to regenerate this app
+
 ## (re)Creating this app
 
 ```sh
@@ -10,7 +12,7 @@ npx create-react-app react-toolpad --template typescript
 ### Cleanup
 ```
 ## Remove logo
-rm src/logo.svg src/index.css App.css
+rm src/logo.svg src/index.css src/App.css
 ## Remove import
 sed -i '' '3d' src/index.tsx
 ## Simplify App
