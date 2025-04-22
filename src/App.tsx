@@ -1,11 +1,12 @@
 // React and React Router
 
 // Third-party libraries
-import { Dashboard, Home, ShoppingCart } from '@mui/icons-material';
 
 // Internal imports
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { Outlet } from 'react-router-dom';
+
+import { Dashboard, Home, ShoppingCart } from '@mui/icons-material';
 
 import type { Navigation } from '@toolpad/core';
 

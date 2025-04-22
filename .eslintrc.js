@@ -45,29 +45,21 @@ module.exports = {
     'import/order': [
       'error',
       {
-        'groups': [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-          'object',
-          'type'
-        ],
-        'pathGroups': [
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'index', 'object', 'type'],
+        pathGroups: [
           {
-            'pattern': '@mui/**',
-            'group': 'external',
-            'position': 'after'
-          }
+            pattern: '@mui/**',
+            group: 'external',
+            position: 'after',
+          },
         ],
-        'pathGroupsExcludedImportTypes': ['@mui/**'],
+        pathGroupsExcludedImportTypes: ['@mui/**'],
         'newlines-between': 'always',
-        'alphabetize': {
-          'order': 'asc',
-          'caseInsensitive': true
-        }
-      }
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
     ],
     '@rkristelijn/mui/sort-sx-keys': 'error',
     '@rkristelijn/mui/prefer-named-imports': 'error',
