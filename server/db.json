@@ -141,6 +141,20 @@
         "zip": "90028",
         "country": "USA"
       }
+    },
+    {
+      "id": "6",
+      "name": "AI Ventures",
+      "type": "startup",
+      "industry": "Artificial Intelligence",
+      "website": "https://aiventures.tech",
+      "billingAddress": {
+        "street": "42 Innovation Hub",
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701",
+        "country": "USA"
+      }
     }
   ],
   "orders": [

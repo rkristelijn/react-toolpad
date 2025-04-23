@@ -1,15 +1,21 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
-import type { SortField, SortDirection } from './AccountListViewController';
+import type { AccountSortField as SortField } from './AccountListView';
+import type { SortDirection } from '../../shared/providers/ListViewContext';
 import type { Account } from '../../../shared/types';
 
 interface GetAccountsResponse {
-  accounts: Account[];
+  accounts: {
+    items: Account[];
+    total: number;
+  };
 }
 
 interface GetAccountsVariables {
   sortField?: SortField;
   sortDirection?: SortDirection;
+  page?: number;
+  pageSize?: number;
 }
 
 interface GetAccountResponse {
@@ -30,29 +36,17 @@ interface DeleteAccountVariables {
 
 // GraphQL Queries
 export const GET_ACCOUNTS = gql`
-  query GetAccounts($sortField: String, $sortDirection: String) {
-    accounts(sortField: $sortField, sortDirection: $sortDirection) {
-      id
-      name
-      type
-      industry
-      website
-      primaryContactId
-      billingAddress {
-        street
-        city
-        state
-        zip
-        country
-      }
-      primaryContact {
+  query GetAccounts($sortField: String, $sortDirection: String, $page: Int, $pageSize: Int) {
+    accounts(sortField: $sortField, sortDirection: $sortDirection, page: $page, pageSize: $pageSize) {
+      items {
         id
-        firstName
-        lastName
-        email
-        phone
-        title
+        name
+        type
+        industry
+        website
+        primaryContactId
       }
+      total
     }
   }
 `;
@@ -73,14 +67,6 @@ export const GET_ACCOUNT = gql`
         zip
         country
       }
-      primaryContact {
-        id
-        firstName
-        lastName
-        email
-        phone
-        title
-      }
       contacts {
         id
         firstName
@@ -100,17 +86,21 @@ export const DELETE_ACCOUNT = gql`
 `;
 
 // Custom hooks for accounts
-export function useAccounts(variables: GetAccountsVariables) {
-  const { data, loading, error, refetch } = useQuery<GetAccountsResponse, GetAccountsVariables>(GET_ACCOUNTS, {
-    variables,
-    fetchPolicy: 'network-only', // Don't use cache when sorting changes
+export function useAccounts(sortField?: SortField, sortDirection?: SortDirection, page: number = 1, pageSize: number = 5) {
+  const { data, loading, error } = useQuery<GetAccountsResponse, GetAccountsVariables>(GET_ACCOUNTS, {
+    variables: {
+      sortField,
+      sortDirection,
+      page,
+      pageSize,
+    },
   });
 
   return {
-    accounts: data?.accounts || [],
+    accounts: data?.accounts.items || [],
+    totalCount: data?.accounts.total || 0,
     loading,
     error,
-    refetch,
   };
 }
 

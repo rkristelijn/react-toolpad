@@ -1,173 +1,56 @@
-import { Refresh } from '@mui/icons-material';
-import {
-  Box,
-  Alert,
-  Paper,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-  Button,
-  Link,
-} from '@mui/material';
-import { useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+// React imports
+import { Box, Paper } from '@mui/material';
+import { useCallback } from 'react';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
-import { useAccounts, useDeleteAccount } from './account-service';
+// Local imports
+import { AccountList } from './AccountList';
+import { AccountListToolbar } from './AccountListToolbar';
+import { AccountSortField } from './AccountListView';
+import { useListView } from '../../shared/providers/ListViewContext';
 
-import type { SortField, SortDirection } from './AccountListViewController';
 import type { Account } from '../../../shared/types';
 
 export interface AccountListAppletProps {
   className?: string;
   sx?: SxProps<Theme>;
-  onSelectAccount?: (account: Account) => void;
-  selectedAccountId?: string;
-  sortField?: SortField;
-  sortDirection?: SortDirection;
-  onSortChange?: (field: SortField) => void;
-  onResetSort?: () => void;
 }
 
-export default function AccountListApplet({
-  className,
-  sx,
-  onSelectAccount,
-  selectedAccountId,
-  sortField,
-  sortDirection,
-  onSortChange,
-  onResetSort,
-}: AccountListAppletProps) {
-  const { accounts, loading, error, refetch } = useAccounts({ sortField, sortDirection });
-  const { deleteAccount, loading: deleteLoading } = useDeleteAccount();
+export default function AccountListApplet({ className, sx }: AccountListAppletProps) {
+  const { selectedItemId, onSelectItem, sortField, sortDirection, onSortFieldChange, onSortDirectionChange } = useListView<
+    AccountSortField,
+    Account
+  >();
 
-  // Auto-select first account when no account is selected and accounts are loaded
-  useEffect(() => {
-    if (!selectedAccountId && accounts.length > 0 && onSelectAccount) {
-      onSelectAccount(accounts[0]);
-    }
-  }, [accounts, selectedAccountId, onSelectAccount]);
-
-  const handleRefresh = () => {
-    refetch();
-  };
-
-  const handleDelete = async (id: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      const success = await deleteAccount(id);
-      if (success) {
-        refetch();
+  const handleSortChange = useCallback(
+    (field: AccountSortField) => {
+      if (field === sortField) {
+        onSortDirectionChange(sortDirection === 'asc' ? 'desc' : 'asc');
+      } else {
+        onSortFieldChange(field);
       }
-    } catch (error) {
-      console.error('Error deleting account:', error);
-    }
-  };
+    },
+    [sortField, sortDirection, onSortFieldChange, onSortDirectionChange]
+  );
 
-  if (loading) {
-    return (
-      <Box display='flex' justifyContent='center' p={4}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Alert severity='error'>Error loading accounts: {error.message}</Alert>
-      </Box>
-    );
-  }
+  const handleSelectAccount = useCallback(
+    (account: Account) => {
+      onSelectItem(account);
+    },
+    [onSelectItem]
+  );
 
   return (
-    <Paper className={className} sx={sx}>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          <Button startIcon={<Refresh />} onClick={handleRefresh}>
-            Refresh
-          </Button>
-          {sortField && (
-            <Button size='small' onClick={onResetSort}>
-              Clear Sorting
-            </Button>
-          )}
-        </Box>
-      </Box>
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={sortField === 'name'}
-                  direction={sortField === 'name' ? sortDirection : 'asc'}
-                  onClick={() => onSortChange?.('name')}
-                >
-                  Name
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortField === 'type'}
-                  direction={sortField === 'type' ? sortDirection : 'asc'}
-                  onClick={() => onSortChange?.('type')}
-                >
-                  Type
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortField === 'industry'}
-                  direction={sortField === 'industry' ? sortDirection : 'asc'}
-                  onClick={() => onSortChange?.('industry')}
-                >
-                  Industry
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>Website</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {accounts.map(account => (
-              <TableRow
-                key={account.id}
-                onClick={() => onSelectAccount?.(account)}
-                selected={account.id === selectedAccountId}
-                hover
-                sx={{ cursor: 'pointer' }}
-              >
-                <TableCell>
-                  <Link component={RouterLink} to={`/accounts/${account.id}`} underline='hover'>
-                    {account.name}
-                  </Link>
-                </TableCell>
-                <TableCell>{account.type}</TableCell>
-                <TableCell>{account.industry}</TableCell>
-                <TableCell>
-                  <a href={account.website} target='_blank' rel='noopener noreferrer' style={{ color: 'inherit' }}>
-                    {account.website}
-                  </a>
-                </TableCell>
-                <TableCell>
-                  <Button size='small' color='error' onClick={e => handleDelete(account.id, e)} disabled={deleteLoading}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <Box component={Paper} className={className} sx={sx}>
+      <AccountListToolbar />
+      <AccountList
+        selectedAccountId={selectedItemId}
+        onSelectAccount={handleSelectAccount}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+      />
+    </Box>
   );
 }

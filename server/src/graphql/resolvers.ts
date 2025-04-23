@@ -16,13 +16,21 @@ import {
 
 const API_URL = 'http://localhost:3001';
 
+interface AccountsArgs {
+  sortField?: string;
+  sortDirection?: string;
+  page?: number;
+  pageSize?: number;
+}
+
 export const resolvers = {
   Query: {
     // Account queries
-    accounts: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
+    accounts: async (_: unknown, { sortField = 'name', sortDirection = 'asc', page = 1, pageSize = 10 }: AccountsArgs) => {
       const response = await axios.get(`${API_URL}/api/accounts`);
       const accounts = response.data as Account[];
 
+      // Apply sorting
       if (sortField) {
         const direction = sortDirection === 'desc' ? -1 : 1;
         accounts.sort((a: Account, b: Account) => {
@@ -35,7 +43,14 @@ export const resolvers = {
         });
       }
 
-      return accounts;
+      // Apply pagination
+      const skip = (page - 1) * pageSize;
+      const items = accounts.slice(skip, skip + pageSize);
+
+      return {
+        items,
+        total: accounts.length,
+      };
     },
     account: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/accounts/${id}`);

@@ -1,12 +1,20 @@
+// React imports
+import { ApolloProvider } from '@apollo/client';
 import { Stack } from '@mui/material';
 import { useEffect } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 
-import AccountDetailApplet from './AccountDetailApplet';
+// MUI imports
+
+// Local imports
 import AccountListApplet from './AccountListApplet';
-import AccountListViewController from './AccountListViewController';
+import AccountDetailApplet from './AccountDetailApplet';
+import { client } from '../../shared/providers/apollo';
+import { ListViewProvider } from '../../shared/providers/ListViewContext';
 
 import type { Account } from '../../../shared/types';
+
+export type AccountSortField = 'name' | 'type' | 'industry';
 
 export default function AccountListView() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -32,11 +40,13 @@ export default function AccountListView() {
   };
 
   return (
-    <Stack direction='column' height='100%' spacing={2}>
-      <AccountListViewController onSelectAccount={handleSelectAccount} selectedAccountId={selectedAccountId}>
-        <AccountListApplet onSelectAccount={handleSelectAccount} selectedAccountId={selectedAccountId} />
-        {selectedAccountId && <AccountDetailApplet accountId={selectedAccountId} />}
-      </AccountListViewController>
-    </Stack>
+    <ApolloProvider client={client}>
+      <Stack direction='column' height='100%' spacing={2}>
+        <ListViewProvider<AccountSortField, Account> onSelectItem={handleSelectAccount} selectedItemId={selectedAccountId}>
+          <AccountListApplet />
+          {selectedAccountId && <AccountDetailApplet accountId={selectedAccountId} />}
+        </ListViewProvider>
+      </Stack>
+    </ApolloProvider>
   );
 }

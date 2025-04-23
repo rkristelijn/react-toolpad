@@ -2,7 +2,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider as BaseApolloProvider } fro
 
 import type { PropsWithChildren } from 'react';
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   uri: 'http://localhost:3001/graphql',
   cache: new InMemoryCache(),
   defaultOptions: {

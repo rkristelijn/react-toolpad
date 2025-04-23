@@ -21,6 +21,11 @@ export const typeDefs = gql`
     billingAddress: Address
   }
 
+  type AccountsResponse {
+    items: [Account!]!
+    total: Int!
+  }
+
   type Contact {
     id: ID!
     firstName: String!
@@ -66,7 +71,7 @@ export const typeDefs = gql`
 
   type Query {
     # Account queries
-    accounts(sortField: String, sortDirection: String): [Account!]!
+    accounts(sortField: String, sortDirection: String, page: Int, pageSize: Int): AccountsResponse!
     account(id: ID!): Account
     accountsByType(type: String!): [Account!]!
     accountsByIndustry(industry: String!): [Account!]!
