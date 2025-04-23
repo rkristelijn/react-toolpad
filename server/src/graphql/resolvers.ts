@@ -7,9 +7,38 @@ const API_URL = 'http://localhost:3001';
 
 export const resolvers = {
   Query: {
-    orders: async (): Promise<Order[]> => {
+    orders: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }): Promise<Order[]> => {
       const response = await axios.get(`${API_URL}/api/orders`);
-      return response.data;
+      const orders = response.data as Order[];
+
+      // Apply sorting if parameters are provided
+      if (sortField) {
+        const direction = sortDirection === 'desc' ? -1 : 1;
+
+        orders.sort((a: Order, b: Order) => {
+          if (sortField === 'orderDate') {
+            return (
+              direction *
+              (new Date(a[sortField as keyof Order] as string).getTime() - new Date(b[sortField as keyof Order] as string).getTime())
+            );
+          }
+
+          const aValue = a[sortField as keyof Order];
+          const bValue = b[sortField as keyof Order];
+
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return direction * aValue.localeCompare(bValue);
+          }
+
+          if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return direction * (aValue - bValue);
+          }
+
+          return 0;
+        });
+      }
+
+      return orders;
     },
     order: async (_: unknown, { id }: { id: string }): Promise<Order> => {
       const response = await axios.get(`${API_URL}/api/orders/${id}`);

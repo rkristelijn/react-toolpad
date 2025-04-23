@@ -27,7 +27,7 @@ export const typeDefs = gql`
   }
 
   type Query {
-    orders: [Order!]!
+    orders(sortField: String, sortDirection: String): [Order!]!
     order(id: ID!): Order
     products: [Product!]!
     product(id: ID!): Product

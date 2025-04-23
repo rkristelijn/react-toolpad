@@ -23,7 +23,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'prettier', 'import', 'jsx-a11y', 'react-hooks', '@rkristelijn/mui'],
+  plugins: ['react', '@typescript-eslint', 'prettier', 'import', 'jsx-a11y', 'react-hooks', '@rkristelijn/mui', 'unused-imports'],
   settings: {
     react: {
       version: 'detect',
@@ -40,7 +40,7 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'error',
-    'no-console': 'warn',
+    'no-console': ['warn', { allow: ['error'] }],
     'import/order': [
       'warn',
       {
@@ -63,5 +63,15 @@ module.exports = {
     '@rkristelijn/mui/sort-sx-keys': 'error',
     '@rkristelijn/mui/prefer-named-imports': 'error',
     '@rkristelijn/mui/no-literal-colors': 'error',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': [
+      'warn',
+      {
+        vars: 'all',
+        varsIgnorePattern: '^_',
+        args: 'after-used',
+        argsIgnorePattern: '^_',
+      },
+    ],
   },
 };

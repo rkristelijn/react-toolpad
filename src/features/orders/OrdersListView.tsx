@@ -29,7 +29,6 @@ export default function OrdersListView() {
     try {
       await refetch();
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Failed to refresh orders:', err);
     }
   };
@@ -53,7 +52,6 @@ export default function OrdersListView() {
     try {
       await updateOrder(orderId, { status: 'cancelled' });
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Failed to cancel order:', err);
     }
   };

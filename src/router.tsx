@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import App from './App';
 import OrderDetailView from './features/orders/OrderDetailView';
-import OrdersListView from './features/orders/OrdersListView';
+import OrderViewController from './features/orders/OrderViewController';
 import ProductDetailView from './features/products/ProductDetailView';
 import ProductsListView from './features/products/ProductsListView';
 import DashboardLayout from './layouts/Layout';
@@ -29,7 +29,7 @@ const router = createBrowserRouter([
           },
           {
             path: '/orders',
-            Component: OrdersListView,
+            Component: OrderViewController,
           },
           {
             path: '/orders/:orderId',

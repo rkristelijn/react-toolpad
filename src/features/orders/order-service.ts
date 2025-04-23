@@ -1,11 +1,12 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
+import type { SortField, SortDirection } from './OrderViewController';
 import type { UpdateOrderInput } from '../../../shared/types';
 
 // GraphQL Queries and Mutations
 const GET_ORDERS = gql`
-  query GetOrders {
-    orders {
+  query GetOrders($sortField: String, $sortDirection: String) {
+    orders(sortField: $sortField, sortDirection: $sortDirection) {
       id
       customerName
       orderDate
@@ -74,8 +75,15 @@ const DELETE_ORDER = gql`
 `;
 
 // Custom hooks for orders
-export function useOrders() {
-  const { data, loading, error, refetch } = useQuery(GET_ORDERS);
+export function useOrders(sortField?: SortField | null, sortDirection?: SortDirection) {
+  const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
+    variables: {
+      sortField: sortField || undefined,
+      sortDirection: sortDirection || undefined,
+    },
+    fetchPolicy: 'network-only', // Don't use cache when sorting changes
+  });
+
   return {
     orders: data?.orders || [],
     loading,

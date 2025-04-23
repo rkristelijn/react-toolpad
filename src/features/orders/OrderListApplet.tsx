@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  TableSortLabel,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -20,15 +21,25 @@ import type { SxProps, Theme } from '@mui/material/styles';
 
 import { useOrders, useUpdateOrder, useDeleteOrder } from './order-service';
 
+import type { SortConfig, SortField } from './OrderViewController';
 import type { Order } from '../../../shared/types';
 
 export interface OrderListAppletProps {
   className?: string;
   sx?: SxProps<Theme>;
+  onSort?: (field: SortField) => void;
+  sortConfig?: SortConfig;
+  onResetSort?: () => void;
 }
 
-export default function OrderListApplet({ className, sx }: OrderListAppletProps) {
-  const { orders, loading, error, refetch } = useOrders();
+export default function OrderListApplet({
+  className,
+  sx,
+  onSort,
+  sortConfig = { field: null, direction: 'asc' },
+  onResetSort,
+}: OrderListAppletProps) {
+  const { orders, loading, error, refetch } = useOrders(sortConfig.field, sortConfig.direction);
   const { updateOrder } = useUpdateOrder();
   const { deleteOrder } = useDeleteOrder();
 
@@ -36,7 +47,6 @@ export default function OrderListApplet({ className, sx }: OrderListAppletProps)
     try {
       await refetch();
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Failed to refresh orders:', err);
     }
   };
@@ -60,7 +70,6 @@ export default function OrderListApplet({ className, sx }: OrderListAppletProps)
     try {
       await updateOrder(orderId, { status: 'cancelled' });
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Failed to cancel order:', err);
     }
   };
@@ -69,8 +78,13 @@ export default function OrderListApplet({ className, sx }: OrderListAppletProps)
     try {
       await deleteOrder(orderId);
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.error('Failed to delete order:', err);
+    }
+  };
+
+  const handleSortClick = (field: SortField) => {
+    if (onSort) {
+      onSort(field);
     }
   };
 
@@ -97,17 +111,62 @@ export default function OrderListApplet({ className, sx }: OrderListAppletProps)
         <Button startIcon={<Refresh />} onClick={handleRefresh}>
           Refresh
         </Button>
+        {sortConfig.field && (
+          <Button size='small' onClick={onResetSort}>
+            Clear Sorting
+          </Button>
+        )}
       </Box>
 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align='right'>Total</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.field === 'id'}
+                  direction={sortConfig.field === 'id' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('id')}
+                >
+                  Order ID
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.field === 'customerName'}
+                  direction={sortConfig.field === 'customerName' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('customerName')}
+                >
+                  Customer
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.field === 'orderDate'}
+                  direction={sortConfig.field === 'orderDate' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('orderDate')}
+                >
+                  Date
+                </TableSortLabel>
+              </TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={sortConfig.field === 'status'}
+                  direction={sortConfig.field === 'status' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('status')}
+                >
+                  Status
+                </TableSortLabel>
+              </TableCell>
+              <TableCell align='right'>
+                <TableSortLabel
+                  active={sortConfig.field === 'total'}
+                  direction={sortConfig.field === 'total' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('total')}
+                >
+                  Total
+                </TableSortLabel>
+              </TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
