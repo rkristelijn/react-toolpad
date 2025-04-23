@@ -1,15 +1,18 @@
 # React Toolpad Documentation
 
 ## Table of Contents
+
 - [Getting Started](./getting-started.md)
 - [Architecture](./architecture.md)
 - [Components](./components.md)
 - [Data Management](./data-management.md)
-- [Styling](./styling.md)
+- [Rules](./rules.md)
 - [Deployment](./deployment.md)
 
 ## Overview
+
 This project is a React application that demonstrates a flexible data view system with the following features:
+
 - Sorting, filtering, and grouping capabilities
 - Pagination support
 - Multiple rendering options (tables, cards, etc.)
@@ -19,6 +22,7 @@ This project is a React application that demonstrates a flexible data view syste
 - ESLint and Prettier configuration
 
 ## Quick Links
+
 - [GitHub Repository](https://github.com/yourusername/react-toolpad)
 - [Live Demo](https://your-demo-url.com)
-- [Issue Tracker](https://github.com/yourusername/react-toolpad/issues) 
+- [Issue Tracker](https://github.com/yourusername/react-toolpad/issues)

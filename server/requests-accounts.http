@@ -1,0 +1,116 @@
+### REST API Examples ###
+
+### Get all accounts
+GET http://localhost:3001/api/accounts
+Accept: application/json
+
+### Get a specific account
+GET http://localhost:3001/api/accounts/1
+Accept: application/json
+
+### Create a new account
+POST http://localhost:3001/api/accounts
+Content-Type: application/json
+
+{
+  "name": "Acme Corporation",
+  "type": "enterprise",
+  "industry": "Technology",
+  "website": "https://acme.com",
+  "primaryContactId": "1",
+  "billingAddress": {
+    "street": "123 Business Ave",
+    "city": "Tech City",
+    "state": "CA",
+    "zip": "94105",
+    "country": "USA"
+  }
+}
+
+### Update an account
+PATCH http://localhost:3001/api/accounts/1
+Content-Type: application/json
+
+{
+  "name": "Acme Corporation Updated",
+  "industry": "Software"
+}
+
+### Delete an account
+DELETE http://localhost:3001/api/accounts/1
+
+### GraphQL Examples ###
+
+### Get all accounts with their contacts and primary contact
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { accounts { id name type industry website primaryContactId billingAddress { street city state zip country } primaryContact { id firstName lastName email phone title } contacts { id firstName lastName email phone title } } }"
+}
+
+### Get a specific account with contacts
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { account(id: \"1\") { id name type industry website primaryContactId billingAddress { street city state zip country } primaryContact { id firstName lastName email phone title } contacts { id firstName lastName email phone title } } }"
+}
+
+### Create a new account
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createAccount(input: { name: \"New Corp\", type: \"enterprise\", industry: \"Technology\", website: \"https://newcorp.com\", primaryContactId: \"1\", billingAddress: { street: \"456 Corp St\", city: \"Tech City\", state: \"CA\", zip: \"94105\", country: \"USA\" } }) { id name type industry website primaryContactId billingAddress { street city state zip country } } }"
+}
+
+### Update an account
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { updateAccount(id: \"1\", input: { name: \"Updated Corp\", industry: \"Software\", primaryContactId: \"2\" }) { id name industry primaryContactId } }"
+}
+
+### Delete an account
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { deleteAccount(id: \"1\") }"
+}
+
+### Get sorted accounts by field and direction
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($sortField: String, $sortDirection: String) { accounts(sortField: $sortField, sortDirection: $sortDirection) { id name type industry website primaryContactId billingAddress { street city state zip country } primaryContact { id firstName lastName email phone title } contacts { id firstName lastName email phone title } } }",
+  "variables": {
+    "sortField": "name",
+    "sortDirection": "asc"
+  }
+}
+
+### Get accounts by type
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($type: String!) { accountsByType(type: $type) { id name industry website } }",
+  "variables": {
+    "type": "enterprise"
+  }
+}
+
+### Get accounts by industry
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($industry: String!) { accountsByIndustry(industry: $industry) { id name type website } }",
+  "variables": {
+    "industry": "Technology"
+  }
+} 

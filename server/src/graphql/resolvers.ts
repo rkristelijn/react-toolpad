@@ -1,12 +1,80 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Order, Product, CreateOrderInput, UpdateOrderInput } from '../../../shared/types';
+import { Order, Product, CreateOrderInput, UpdateOrderInput, Account, Contact } from '../../../shared/types';
 
 const API_URL = 'http://localhost:3001';
 
 export const resolvers = {
   Query: {
+    // Account queries
+    accounts: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
+      const response = await axios.get(`${API_URL}/api/accounts`);
+      const accounts = response.data as Account[];
+
+      if (sortField) {
+        const direction = sortDirection === 'desc' ? -1 : 1;
+        accounts.sort((a: Account, b: Account) => {
+          const aValue = a[sortField as keyof Account];
+          const bValue = b[sortField as keyof Account];
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return direction * aValue.localeCompare(bValue);
+          }
+          return 0;
+        });
+      }
+
+      return accounts;
+    },
+    account: async (_: unknown, { id }: { id: string }) => {
+      const response = await axios.get(`${API_URL}/api/accounts/${id}`);
+      return response.data;
+    },
+    accountsByType: async (_: unknown, { type }: { type: string }) => {
+      const response = await axios.get(`${API_URL}/api/accounts`);
+      const accounts = response.data as Account[];
+      return accounts.filter(account => account.type === type);
+    },
+    accountsByIndustry: async (_: unknown, { industry }: { industry: string }) => {
+      const response = await axios.get(`${API_URL}/api/accounts`);
+      const accounts = response.data as Account[];
+      return accounts.filter(account => account.industry === industry);
+    },
+
+    // Contact queries
+    contacts: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
+      const response = await axios.get(`${API_URL}/api/contacts`);
+      const contacts = response.data as Contact[];
+
+      if (sortField) {
+        const direction = sortDirection === 'desc' ? -1 : 1;
+        contacts.sort((a: Contact, b: Contact) => {
+          const aValue = a[sortField as keyof Contact];
+          const bValue = b[sortField as keyof Contact];
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return direction * aValue.localeCompare(bValue);
+          }
+          return 0;
+        });
+      }
+
+      return contacts;
+    },
+    contact: async (_: unknown, { id }: { id: string }) => {
+      const response = await axios.get(`${API_URL}/api/contacts/${id}`);
+      return response.data;
+    },
+    contactsByAccount: async (_: unknown, { accountId }: { accountId: string }) => {
+      const response = await axios.get(`${API_URL}/api/contacts`);
+      const contacts = response.data as Contact[];
+      return contacts.filter(contact => contact.accountId === accountId);
+    },
+    contactsByTitle: async (_: unknown, { title }: { title: string }) => {
+      const response = await axios.get(`${API_URL}/api/contacts`);
+      const contacts = response.data as Contact[];
+      return contacts.filter(contact => contact.title === title);
+    },
+
     orders: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
       const response = await axios.get(`${API_URL}/api/orders`);
       const orders = response.data as Order[];
@@ -79,6 +147,42 @@ export const resolvers = {
     },
   },
   Mutation: {
+    // Account mutations
+    createAccount: async (_: unknown, { input }: { input: any }): Promise<Account> => {
+      const account = {
+        id: uuidv4(),
+        ...input,
+      };
+      const response = await axios.post(`${API_URL}/api/accounts`, account);
+      return response.data;
+    },
+    updateAccount: async (_: unknown, { id, input }: { id: string; input: any }): Promise<Account> => {
+      const response = await axios.patch(`${API_URL}/api/accounts/${id}`, input);
+      return response.data;
+    },
+    deleteAccount: async (_: unknown, { id }: { id: string }): Promise<boolean> => {
+      await axios.delete(`${API_URL}/api/accounts/${id}`);
+      return true;
+    },
+
+    // Contact mutations
+    createContact: async (_: unknown, { input }: { input: any }): Promise<Contact> => {
+      const contact = {
+        id: uuidv4(),
+        ...input,
+      };
+      const response = await axios.post(`${API_URL}/api/contacts`, contact);
+      return response.data;
+    },
+    updateContact: async (_: unknown, { id, input }: { id: string; input: any }): Promise<Contact> => {
+      const response = await axios.patch(`${API_URL}/api/contacts/${id}`, input);
+      return response.data;
+    },
+    deleteContact: async (_: unknown, { id }: { id: string }): Promise<boolean> => {
+      await axios.delete(`${API_URL}/api/contacts/${id}`);
+      return true;
+    },
+
     createOrder: async (_: unknown, { input }: { input: CreateOrderInput }): Promise<Order> => {
       const order = {
         id: uuidv4(),
@@ -119,6 +223,24 @@ export const resolvers = {
           };
         })
       );
+    },
+  },
+  Account: {
+    primaryContact: async (account: Account) => {
+      if (!account.primaryContactId) return null;
+      const response = await axios.get(`${API_URL}/api/contacts/${account.primaryContactId}`);
+      return response.data;
+    },
+    contacts: async (account: Account) => {
+      const response = await axios.get(`${API_URL}/api/contacts`);
+      const contacts = response.data as Contact[];
+      return contacts.filter(contact => contact.accountId === account.id);
+    },
+  },
+  Contact: {
+    account: async (contact: Contact) => {
+      const response = await axios.get(`${API_URL}/api/accounts/${contact.accountId}`);
+      return response.data;
     },
   },
 };

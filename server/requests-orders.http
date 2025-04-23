@@ -37,14 +37,6 @@ Content-Type: application/json
 ### Delete an order
 DELETE http://localhost:3001/api/orders/1
 
-### Get all products
-GET http://localhost:3001/api/products
-Accept: application/json
-
-### Get a specific product
-GET http://localhost:3001/api/products/101
-Accept: application/json
-
 ### GraphQL Examples ###
 
 ### Get all orders with their items and products
@@ -85,22 +77,6 @@ Content-Type: application/json
 
 {
   "query": "mutation { deleteOrder(id: \"1\") }"
-}
-
-### Get all products
-POST http://localhost:3001/graphql
-Content-Type: application/json
-
-{
-  "query": "query { products { id name price description } }"
-}
-
-### Get a specific product
-POST http://localhost:3001/graphql
-Content-Type: application/json
-
-{
-  "query": "query { product(id: \"101\") { id name price description } }"
 }
 
 ### Get sorted orders by field and direction

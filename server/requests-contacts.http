@@ -1,0 +1,117 @@
+### REST API Examples ###
+
+### Get all contacts
+GET http://localhost:3001/api/contacts
+Accept: application/json
+
+### Get a specific contact
+GET http://localhost:3001/api/contacts/1
+Accept: application/json
+
+### Create a new contact
+POST http://localhost:3001/api/contacts
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "+1-555-0123",
+  "title": "CEO",
+  "accountId": "1",
+  "address": {
+    "street": "123 Main St",
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94105",
+    "country": "USA"
+  }
+}
+
+### Update a contact
+PATCH http://localhost:3001/api/contacts/1
+Content-Type: application/json
+
+{
+  "title": "CTO",
+  "phone": "+1-555-0124"
+}
+
+### Delete a contact
+DELETE http://localhost:3001/api/contacts/1
+
+### GraphQL Examples ###
+
+### Get all contacts with their account details
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { contacts { id firstName lastName email phone title accountId address { street city state zip country } account { id name type industry website } } }"
+}
+
+### Get a specific contact with account details
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { contact(id: \"1\") { id firstName lastName email phone title accountId address { street city state zip country } account { id name type industry website } } }"
+}
+
+### Create a new contact
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createContact(input: { firstName: \"Jane\", lastName: \"Smith\", email: \"jane.smith@example.com\", phone: \"+1-555-0125\", title: \"CFO\", accountId: \"1\", address: { street: \"456 Market St\", city: \"San Francisco\", state: \"CA\", zip: \"94105\", country: \"USA\" } }) { id firstName lastName email title accountId } }"
+}
+
+### Update a contact
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { updateContact(id: \"1\", input: { title: \"COO\", phone: \"+1-555-0126\" }) { id title phone } }"
+}
+
+### Delete a contact
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { deleteContact(id: \"1\") }"
+}
+
+### Get sorted contacts by field and direction
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($sortField: String, $sortDirection: String) { contacts(sortField: $sortField, sortDirection: $sortDirection) { id firstName lastName email phone title accountId address { street city state zip country } account { id name type industry website } } }",
+  "variables": {
+    "sortField": "lastName",
+    "sortDirection": "asc"
+  }
+}
+
+### Get contacts by account
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($accountId: String!) { contactsByAccount(accountId: $accountId) { id firstName lastName email title } }",
+  "variables": {
+    "accountId": "1"
+  }
+}
+
+### Get contacts by title
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($title: String!) { contactsByTitle(title: $title) { id firstName lastName email accountId account { name } } }",
+  "variables": {
+    "title": "CTO"
+  }
+} 

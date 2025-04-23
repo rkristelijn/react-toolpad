@@ -1,6 +1,7 @@
 # React Toolpad
 
-A modern React application that demonstrates a flexible data view system with sorting, filtering, grouping, and pagination capabilities. It supports multiple rendering options (tables, cards, etc.) and persists settings in the URL for easy sharing and navigation.
+A modern React application that demonstrates a flexible data view system with sorting, filtering, grouping, and pagination capabilities. It
+supports multiple rendering options (tables, cards, etc.) and persists settings in the URL for easy sharing and navigation.
 
 ## Features
 
@@ -22,7 +23,7 @@ cd react-toolpad
 # Install dependencies
 npm install
 
-# Start the development server
+# Start the both the server and the client
 npm start
 ```
 
@@ -51,8 +52,13 @@ For detailed documentation, please visit our [docs](./docs/) directory:
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Contributions are welcome! Please read our [Contributing Guide](./CONTRIBUTING.md) for details on our code of conduct and the process for
+submitting pull requests.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## Todo
+
+There is a list of [todos](./TODO.md).

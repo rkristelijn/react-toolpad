@@ -1,0 +1,88 @@
+### REST API Examples ###
+
+### Get all products
+GET http://localhost:3001/api/products
+Accept: application/json
+
+### Get a specific product
+GET http://localhost:3001/api/products/101
+Accept: application/json
+
+### Create a new product
+POST http://localhost:3001/api/products
+Content-Type: application/json
+
+{
+  "name": "Premium Widget",
+  "description": "A high-quality widget for professional use",
+  "price": 199.99,
+  "category": "Tools",
+  "stock": 100,
+  "sku": "PW-001"
+}
+
+### Update a product
+PATCH http://localhost:3001/api/products/101
+Content-Type: application/json
+
+{
+  "price": 189.99,
+  "stock": 95
+}
+
+### Delete a product
+DELETE http://localhost:3001/api/products/101
+
+### GraphQL Examples ###
+
+### Get all products
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { products { id name price description category stock sku } }"
+}
+
+### Get a specific product
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query { product(id: \"101\") { id name price description category stock sku } }"
+}
+
+### Create a new product
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { createProduct(input: { name: \"Super Widget\", description: \"An advanced widget with premium features\", price: 299.99, category: \"Premium Tools\", stock: 50, sku: \"SW-001\" }) { id name price category } }"
+}
+
+### Update a product
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { updateProduct(id: \"101\", input: { price: 289.99, stock: 45 }) { id price stock } }"
+}
+
+### Delete a product
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "mutation { deleteProduct(id: \"101\") }"
+}
+
+### Get sorted products by field and direction
+POST http://localhost:3001/graphql
+Content-Type: application/json
+
+{
+  "query": "query ($sortField: String, $sortDirection: String) { products(sortField: $sortField, sortDirection: $sortDirection) { id name price description category stock sku } }",
+  "variables": {
+    "sortField": "price",
+    "sortDirection": "desc"
+  }
+} 
