@@ -4,12 +4,15 @@ import type { SortField, SortDirection } from './ProductListViewController';
 import type { Product, ProductInput } from '../../../shared/types';
 
 export const GET_PRODUCTS = gql`
-  query GetProducts($sortField: String, $sortDirection: String) {
-    products(sortField: $sortField, sortDirection: $sortDirection) {
-      id
-      name
-      price
-      stock
+  query GetProducts($sortField: String, $sortDirection: String, $page: Int, $pageSize: Int) {
+    products(sortField: $sortField, sortDirection: $sortDirection, page: $page, pageSize: $pageSize) {
+      items {
+        id
+        name
+        price
+        stock
+      }
+      total
     }
   }
 `;
@@ -56,17 +59,32 @@ export const DELETE_PRODUCT = gql`
   }
 `;
 
-export function useProducts(sortField?: SortField | null, sortDirection?: SortDirection) {
-  const { data, loading, error, refetch } = useQuery<{ products: Product[] }>(GET_PRODUCTS, {
-    variables: {
-      sortField: sortField || undefined,
-      sortDirection: sortDirection || undefined,
-    },
-    fetchPolicy: 'network-only', // Don't use cache when sorting changes
+export interface ProductsResponse {
+  items: Product[];
+  total: number;
+}
+
+interface ProductsQueryResult {
+  products: {
+    items: Product[];
+    total: number;
+  };
+}
+
+interface ProductsQueryVariables {
+  sortField?: SortField;
+  sortDirection?: SortDirection;
+  page?: number;
+  pageSize?: number;
+}
+
+export function useProducts(variables: ProductsQueryVariables) {
+  const { data, loading, error, refetch } = useQuery<ProductsQueryResult, ProductsQueryVariables>(GET_PRODUCTS, {
+    variables,
   });
 
   return {
-    products: data?.products || [],
+    data: data?.products,
     loading,
     error,
     refetch,

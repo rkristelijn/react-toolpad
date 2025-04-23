@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Paper,
   Table,
@@ -11,25 +12,32 @@ import {
   TableSortLabel,
   Box,
   Button,
+  TablePagination,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { visuallyHidden } from '@mui/utils';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
 import { useProducts } from './product-service';
 
-import type { SortConfig, SortField } from './ProductListViewController';
 import type { Product } from '../../../shared/types';
+
+export type SortField = keyof Pick<Product, 'name' | 'price' | 'stock'>;
+export type SortDirection = 'asc' | 'desc';
 
 export interface ProductListAppletProps {
   className?: string;
   sx?: SxProps<Theme>;
   onSelectProduct?: (product: Product) => void;
   selectedProductId?: string;
-  onSort?: (field: SortField) => void;
-  sortConfig?: SortConfig;
+  sortField?: SortField;
+  sortDirection?: SortDirection;
+  onSortChange?: (field: SortField, direction: SortDirection) => void;
   onResetSort?: () => void;
+  page?: number;
+  onPageChange?: (page: number) => void;
 }
 
 export default function ProductListApplet({
@@ -37,11 +45,25 @@ export default function ProductListApplet({
   sx,
   onSelectProduct,
   selectedProductId,
-  onSort,
-  sortConfig = { field: null, direction: 'asc' },
+  sortField,
+  sortDirection,
+  onSortChange,
   onResetSort,
+  page = 0,
+  onPageChange,
 }: ProductListAppletProps) {
-  const { products, loading, error } = useProducts(sortConfig.field, sortConfig.direction);
+  const pageSize = 5;
+  const { data, loading, error } = useProducts({
+    sortField,
+    sortDirection,
+    page,
+    pageSize,
+  });
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const products = data?.items ?? [];
+  const total = data?.total ?? 0;
 
   // Auto-select first product when no product is selected and products are loaded
   useEffect(() => {
@@ -51,8 +73,25 @@ export default function ProductListApplet({
   }, [products, selectedProductId, onSelectProduct]);
 
   const handleSortClick = (field: SortField) => {
-    if (onSort) {
-      onSort(field);
+    if (!onSortChange) return;
+
+    const newDirection: SortDirection = field === sortField && sortDirection === 'asc' ? 'desc' : 'asc';
+    onSortChange(field, newDirection);
+  };
+
+  const handleProductClick = (product: Product) => {
+    // Store current URL parameters in state for when we return
+    navigate(`/products/${product.id}`, {
+      state: {
+        fromList: true,
+        returnParams: searchParams.toString(),
+      },
+    });
+  };
+
+  const handlePageChange = (_event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    if (onPageChange) {
+      onPageChange(newPage);
     }
   };
 
@@ -64,11 +103,13 @@ export default function ProductListApplet({
     return <Typography color='error'>Error loading products: {error.message}</Typography>;
   }
 
+  if (!data) return null;
+
   return (
     <Box className={className} sx={sx}>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
         <Typography variant='h5'>Products</Typography>
-        {sortConfig.field && (
+        {sortField && (
           <Button size='small' onClick={onResetSort}>
             Clear Sorting
           </Button>
@@ -81,44 +122,50 @@ export default function ProductListApplet({
             <TableRow>
               <TableCell>
                 <TableSortLabel
-                  active={sortConfig.field === 'id'}
-                  direction={sortConfig.field === 'id' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('id')}
-                >
-                  ID
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.field === 'name'}
-                  direction={sortConfig.field === 'name' ? sortConfig.direction : 'asc'}
+                  active={sortField === 'name'}
+                  direction={sortField === 'name' ? sortDirection : 'asc'}
                   onClick={() => handleSortClick('name')}
                 >
                   Name
+                  {sortField === 'name' ? (
+                    <Box component='span' sx={visuallyHidden}>
+                      {sortDirection === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={sortConfig.field === 'price'}
-                  direction={sortConfig.field === 'price' ? sortConfig.direction : 'asc'}
+                  active={sortField === 'price'}
+                  direction={sortField === 'price' ? sortDirection : 'asc'}
                   onClick={() => handleSortClick('price')}
                 >
                   Price
+                  {sortField === 'price' ? (
+                    <Box component='span' sx={visuallyHidden}>
+                      {sortDirection === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
                 </TableSortLabel>
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={sortConfig.field === 'stock'}
-                  direction={sortConfig.field === 'stock' ? sortConfig.direction : 'asc'}
+                  active={sortField === 'stock'}
+                  direction={sortField === 'stock' ? sortDirection : 'asc'}
                   onClick={() => handleSortClick('stock')}
                 >
                   Stock
+                  {sortField === 'stock' ? (
+                    <Box component='span' sx={visuallyHidden}>
+                      {sortDirection === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
                 </TableSortLabel>
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map(product => (
+            {products.map((product: Product) => (
               <TableRow
                 key={product.id}
                 onClick={() => onSelectProduct?.(product)}
@@ -127,14 +174,9 @@ export default function ProductListApplet({
                 sx={{ cursor: 'pointer' }}
               >
                 <TableCell>
-                  <Link component={RouterLink} to={`/products/${product.id}`} color='primary'>
-                    {product.id}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Typography variant='body1' component='div'>
+                  <Link component='button' onClick={() => handleProductClick(product)} color='primary'>
                     {product.name}
-                  </Typography>
+                  </Link>
                 </TableCell>
                 <TableCell>${product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
@@ -143,6 +185,14 @@ export default function ProductListApplet({
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        component='div'
+        count={total}
+        page={page}
+        onPageChange={handlePageChange}
+        rowsPerPage={pageSize}
+        rowsPerPageOptions={[5]}
+      />
     </Box>
   );
 }

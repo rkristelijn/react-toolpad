@@ -34,6 +34,41 @@
       "description": "Ergonomic wireless mouse with long battery life",
       "price": 79.99,
       "stock": 200
+    },
+    {
+      "id": "106",
+      "name": "Gaming Keyboard",
+      "description": "Mechanical gaming keyboard with RGB lighting",
+      "price": 149.99,
+      "stock": 85
+    },
+    {
+      "id": "107",
+      "name": "External SSD",
+      "description": "1TB portable SSD with USB-C connection",
+      "price": 179.99,
+      "stock": 120
+    },
+    {
+      "id": "108",
+      "name": "Webcam Pro",
+      "description": "1080p webcam with built-in microphone",
+      "price": 89.99,
+      "stock": 60
+    },
+    {
+      "id": "109",
+      "name": "Tablet Stand",
+      "description": "Adjustable aluminum stand for tablets and laptops",
+      "price": 39.99,
+      "stock": 150
+    },
+    {
+      "id": "110",
+      "name": "USB-C Hub",
+      "description": "7-in-1 USB-C hub with HDMI and card reader",
+      "price": 69.99,
+      "stock": 95
     }
   ],
   "orders": [

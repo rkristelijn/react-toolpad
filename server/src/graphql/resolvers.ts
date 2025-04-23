@@ -7,7 +7,7 @@ const API_URL = 'http://localhost:3001';
 
 export const resolvers = {
   Query: {
-    orders: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }): Promise<Order[]> => {
+    orders: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
       const response = await axios.get(`${API_URL}/api/orders`);
       const orders = response.data as Order[];
 
@@ -16,13 +16,6 @@ export const resolvers = {
         const direction = sortDirection === 'desc' ? -1 : 1;
 
         orders.sort((a: Order, b: Order) => {
-          if (sortField === 'orderDate') {
-            return (
-              direction *
-              (new Date(a[sortField as keyof Order] as string).getTime() - new Date(b[sortField as keyof Order] as string).getTime())
-            );
-          }
-
           const aValue = a[sortField as keyof Order];
           const bValue = b[sortField as keyof Order];
 
@@ -40,13 +33,16 @@ export const resolvers = {
 
       return orders;
     },
-    order: async (_: unknown, { id }: { id: string }): Promise<Order> => {
+    order: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/orders/${id}`);
       return response.data;
     },
-    products: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }): Promise<Product[]> => {
+    products: async (
+      _: unknown,
+      { sortField, sortDirection, page = 0, pageSize = 5 }: { sortField?: string; sortDirection?: string; page?: number; pageSize?: number }
+    ) => {
       const response = await axios.get(`${API_URL}/api/products`);
-      const products = response.data as Product[];
+      let products = response.data as Product[];
 
       // Apply sorting if parameters are provided
       if (sortField) {
@@ -68,9 +64,16 @@ export const resolvers = {
         });
       }
 
-      return products;
+      // Apply pagination
+      const start = page * pageSize;
+      const paginatedProducts = products.slice(start, start + pageSize);
+
+      return {
+        items: paginatedProducts,
+        total: products.length,
+      };
     },
-    product: async (_: unknown, { id }: { id: string }): Promise<Product> => {
+    product: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/products/${id}`);
       return response.data;
     },

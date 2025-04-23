@@ -26,10 +26,15 @@ export const typeDefs = gql`
     stock: Int
   }
 
+  type ProductsResponse {
+    items: [Product!]!
+    total: Int!
+  }
+
   type Query {
     orders(sortField: String, sortDirection: String): [Order!]!
     order(id: ID!): Order
-    products(sortField: String, sortDirection: String): [Product!]!
+    products(sortField: String, sortDirection: String, page: Int, pageSize: Int): ProductsResponse!
     product(id: ID!): Product
   }
 
