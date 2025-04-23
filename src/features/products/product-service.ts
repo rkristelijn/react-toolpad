@@ -1,10 +1,11 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 
+import type { SortField, SortDirection } from './ProductListViewController';
 import type { Product, ProductInput } from '../../../shared/types';
 
 export const GET_PRODUCTS = gql`
-  query GetProducts {
-    products {
+  query GetProducts($sortField: String, $sortDirection: String) {
+    products(sortField: $sortField, sortDirection: $sortDirection) {
       id
       name
       price
@@ -55,8 +56,14 @@ export const DELETE_PRODUCT = gql`
   }
 `;
 
-export function useProducts() {
-  const { data, loading, error, refetch } = useQuery<{ products: Product[] }>(GET_PRODUCTS);
+export function useProducts(sortField?: SortField | null, sortDirection?: SortDirection) {
+  const { data, loading, error, refetch } = useQuery<{ products: Product[] }>(GET_PRODUCTS, {
+    variables: {
+      sortField: sortField || undefined,
+      sortDirection: sortDirection || undefined,
+    },
+    fetchPolicy: 'network-only', // Don't use cache when sorting changes
+  });
 
   return {
     products: data?.products || [],

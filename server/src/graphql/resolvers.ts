@@ -44,9 +44,31 @@ export const resolvers = {
       const response = await axios.get(`${API_URL}/api/orders/${id}`);
       return response.data;
     },
-    products: async (): Promise<Product[]> => {
+    products: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }): Promise<Product[]> => {
       const response = await axios.get(`${API_URL}/api/products`);
-      return response.data;
+      const products = response.data as Product[];
+
+      // Apply sorting if parameters are provided
+      if (sortField) {
+        const direction = sortDirection === 'desc' ? -1 : 1;
+
+        products.sort((a: Product, b: Product) => {
+          const aValue = a[sortField as keyof Product];
+          const bValue = b[sortField as keyof Product];
+
+          if (typeof aValue === 'string' && typeof bValue === 'string') {
+            return direction * aValue.localeCompare(bValue);
+          }
+
+          if (typeof aValue === 'number' && typeof bValue === 'number') {
+            return direction * (aValue - bValue);
+          }
+
+          return 0;
+        });
+      }
+
+      return products;
     },
     product: async (_: unknown, { id }: { id: string }): Promise<Product> => {
       const response = await axios.get(`${API_URL}/api/products/${id}`);
