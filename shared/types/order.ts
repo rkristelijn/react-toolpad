@@ -1,5 +1,5 @@
-import type { Product } from './product';
 import type { Account } from './account';
+import type { Product } from './product';
 
 export interface OrderItem {
   id: string;

@@ -1,7 +1,7 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
-import type { Account } from '../../../shared/types';
 import type { SortField, SortDirection } from './AccountListViewController';
+import type { Account } from '../../../shared/types';
 
 interface GetAccountsResponse {
   accounts: Account[];

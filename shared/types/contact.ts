@@ -1,5 +1,5 @@
-import type { Address, AddressInput } from './address';
 import type { Account } from './account';
+import type { Address, AddressInput } from './address';
 
 export interface Contact {
   id: string;

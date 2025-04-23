@@ -1,6 +1,7 @@
 import { Box, Alert, Paper, Typography, Link, Grid, CircularProgress } from '@mui/material';
 
 import type { SxProps, Theme } from '@mui/material/styles';
+
 import { useAccount } from './account-service';
 
 interface AccountDetailAppletProps {

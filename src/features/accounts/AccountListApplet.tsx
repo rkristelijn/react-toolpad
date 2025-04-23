@@ -1,3 +1,4 @@
+import { Refresh } from '@mui/icons-material';
 import {
   Box,
   Alert,
@@ -11,12 +12,15 @@ import {
   TableRow,
   TableSortLabel,
   Button,
-  Typography,
+  Link,
 } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material/styles';
+import { useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Refresh } from '@mui/icons-material';
+
+import type { SxProps, Theme } from '@mui/material/styles';
+
 import { useAccounts, useDeleteAccount } from './account-service';
+
 import type { SortField, SortDirection } from './AccountListViewController';
 import type { Account } from '../../../shared/types';
 
@@ -43,6 +47,13 @@ export default function AccountListApplet({
 }: AccountListAppletProps) {
   const { accounts, loading, error, refetch } = useAccounts({ sortField, sortDirection });
   const { deleteAccount, loading: deleteLoading } = useDeleteAccount();
+
+  // Auto-select first account when no account is selected and accounts are loaded
+  useEffect(() => {
+    if (!selectedAccountId && accounts.length > 0 && onSelectAccount) {
+      onSelectAccount(accounts[0]);
+    }
+  }, [accounts, selectedAccountId, onSelectAccount]);
 
   const handleRefresh = () => {
     refetch();
@@ -78,10 +89,7 @@ export default function AccountListApplet({
 
   return (
     <Paper className={className} sx={sx}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant='h5' component='h2'>
-          Accounts
-        </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button startIcon={<Refresh />} onClick={handleRefresh}>
             Refresh
@@ -139,9 +147,9 @@ export default function AccountListApplet({
                 sx={{ cursor: 'pointer' }}
               >
                 <TableCell>
-                  <RouterLink to={`/accounts/${account.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                  <Link component={RouterLink} to={`/accounts/${account.id}`} underline='hover'>
                     {account.name}
-                  </RouterLink>
+                  </Link>
                 </TableCell>
                 <TableCell>{account.type}</TableCell>
                 <TableCell>{account.industry}</TableCell>

@@ -4,8 +4,8 @@ import { useSearchParams } from 'react-router-dom';
 
 import AccountListApplet from './AccountListApplet';
 
-import type { Account } from '../../../shared/types';
 import type { AccountListAppletProps } from './AccountListApplet';
+import type { Account } from '../../../shared/types';
 import type { ReactElement } from 'react';
 
 export type SortField = 'name' | 'type' | 'industry';
