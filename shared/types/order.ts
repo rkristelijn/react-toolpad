@@ -1,27 +1,34 @@
-import type { OrderItem, OrderItemInput } from './order-item';
+import type { Product } from './product';
 
-export type OrderStatus = 'pending' | 'processing' | 'completed' | 'cancelled';
+export interface OrderItem {
+  id: string;
+  productId: string;
+  quantity: number;
+  price: number;
+  product?: Product;
+}
 
 export interface Order {
   id: string;
   customerName: string;
-  customerEmail: string;
-  status: OrderStatus;
-  items: OrderItem[];
-  total: number;
-  createdAt: string;
-  updatedAt: string;
   orderDate: string;
+  status: string;
+  total: number;
+  items: OrderItem[];
+}
+
+export interface OrderItemInput {
+  productId: string;
+  quantity: number;
 }
 
 export interface CreateOrderInput {
   customerName: string;
-  customerEmail: string;
   items: OrderItemInput[];
 }
 
 export interface UpdateOrderInput {
   customerName?: string;
-  status?: OrderStatus;
+  status?: string;
   items?: OrderItemInput[];
 }
