@@ -1,7 +1,18 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Order, Product, CreateOrderInput, UpdateOrderInput, Account, Contact } from '../../../shared/types';
+import {
+  Order,
+  Product,
+  CreateOrderInput,
+  UpdateOrderInput,
+  Account,
+  Contact,
+  CreateAccountInput,
+  UpdateAccountInput,
+  CreateContactInput,
+  UpdateContactInput,
+} from '../../../shared/types';
 
 const API_URL = 'http://localhost:3001';
 
@@ -110,7 +121,7 @@ export const resolvers = {
       { sortField, sortDirection, page = 0, pageSize = 5 }: { sortField?: string; sortDirection?: string; page?: number; pageSize?: number }
     ) => {
       const response = await axios.get(`${API_URL}/api/products`);
-      let products = response.data as Product[];
+      const products = response.data as Product[];
 
       // Apply sorting if parameters are provided
       if (sortField) {
@@ -148,7 +159,7 @@ export const resolvers = {
   },
   Mutation: {
     // Account mutations
-    createAccount: async (_: unknown, { input }: { input: any }): Promise<Account> => {
+    createAccount: async (_: unknown, { input }: { input: CreateAccountInput }): Promise<Account> => {
       const account = {
         id: uuidv4(),
         ...input,
@@ -156,7 +167,7 @@ export const resolvers = {
       const response = await axios.post(`${API_URL}/api/accounts`, account);
       return response.data;
     },
-    updateAccount: async (_: unknown, { id, input }: { id: string; input: any }): Promise<Account> => {
+    updateAccount: async (_: unknown, { id, input }: { id: string; input: UpdateAccountInput }): Promise<Account> => {
       const response = await axios.patch(`${API_URL}/api/accounts/${id}`, input);
       return response.data;
     },
@@ -166,7 +177,7 @@ export const resolvers = {
     },
 
     // Contact mutations
-    createContact: async (_: unknown, { input }: { input: any }): Promise<Contact> => {
+    createContact: async (_: unknown, { input }: { input: CreateContactInput }): Promise<Contact> => {
       const contact = {
         id: uuidv4(),
         ...input,
@@ -174,7 +185,7 @@ export const resolvers = {
       const response = await axios.post(`${API_URL}/api/contacts`, contact);
       return response.data;
     },
-    updateContact: async (_: unknown, { id, input }: { id: string; input: any }): Promise<Contact> => {
+    updateContact: async (_: unknown, { id, input }: { id: string; input: UpdateContactInput }): Promise<Contact> => {
       const response = await axios.patch(`${API_URL}/api/contacts/${id}`, input);
       return response.data;
     },

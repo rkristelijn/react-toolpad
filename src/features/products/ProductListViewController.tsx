@@ -1,6 +1,5 @@
 import { Stack } from '@mui/material';
-import { Children, cloneElement, isValidElement, useEffect } from 'react';
-import { useState } from 'react';
+import { Children, cloneElement, isValidElement, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import ProductListApplet from './ProductListApplet';

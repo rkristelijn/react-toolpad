@@ -2,7 +2,7 @@ import { Dashboard, Home, Inventory, ShoppingCart } from '@mui/icons-material';
 
 import type { Navigation } from '@toolpad/core';
 
-export const NAVIGATION: Navigation = [
+export const navigationConfig: Navigation = [
   {
     kind: 'header',
     title: 'Main Menu',
@@ -28,6 +28,6 @@ export const NAVIGATION: Navigation = [
   },
 ];
 
-export const BRANDING = {
+export const brandingConfig = {
   title: 'My Toolpad App',
 };

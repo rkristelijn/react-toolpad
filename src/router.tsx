@@ -5,9 +5,9 @@ import OrderDetailView from './features/orders/OrderDetailView';
 import OrderViewController from './features/orders/OrderViewController';
 import ProductDetailView from './features/products/ProductDetailView';
 import ProductsListView from './features/products/ProductsListView';
-import DashboardLayout from './layouts/Layout';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
+import MainLayout from './shared/layouts/MainLayout';
 
 const router = createBrowserRouter([
   {
@@ -17,7 +17,7 @@ const router = createBrowserRouter([
       {
         // Dashboard layout route
         path: '/',
-        Component: DashboardLayout,
+        Component: MainLayout,
         children: [
           {
             path: '/',

@@ -4,13 +4,13 @@
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import { Outlet } from 'react-router-dom';
 
-import { BRANDING, NAVIGATION } from './navigation/config';
-import { ApolloProvider } from './providers/ApolloProvider';
+import { brandingConfig, navigationConfig } from './shared/navigation/navigationConfig';
+import { ApolloProvider } from './shared/providers/apollo';
 
 export default function App() {
   return (
     <ApolloProvider>
-      <ReactRouterAppProvider navigation={NAVIGATION} branding={BRANDING}>
+      <ReactRouterAppProvider navigation={navigationConfig} branding={brandingConfig}>
         <Outlet />
       </ReactRouterAppProvider>
     </ApolloProvider>

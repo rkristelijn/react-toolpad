@@ -63,8 +63,8 @@ export default function ProductDetailApplet({ productId, className, sx }: Produc
             <Typography variant='subtitle2' color='text.secondary'>
               Stock
             </Typography>
-            <Typography variant='h6' color={product.stock > 10 ? 'success.main' : 'warning.main'}>
-              {product.stock} units
+            <Typography variant='h6' color={(product.stock ?? 0) > 10 ? 'success.main' : 'warning.main'}>
+              {product.stock ?? 0} units
             </Typography>
           </Grid>
           <Grid size={12}>
