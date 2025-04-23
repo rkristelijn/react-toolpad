@@ -183,3 +183,88 @@ submitting pull requests.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+# Cursor Development Guidelines
+
+## Before Completing Any Task
+
+1. **Linting Checks**
+
+   - Always check for linting errors in the Problems tab
+   - Common issues to watch for:
+     - Unused imports
+     - Missing type definitions
+     - Unused variables
+     - Incorrect prop types
+     - Missing dependencies in useEffect
+   - Fix ALL linting errors before considering a task complete
+
+2. **Type Safety**
+
+   - Ensure all TypeScript types are properly defined
+   - Avoid using `any` type
+   - Use proper generics for API responses and queries
+
+3. **Code Organization**
+
+   - Follow the feature module pattern
+   - Keep components focused and single-responsibility
+   - Use proper file naming conventions
+
+4. **Testing**
+   - Write tests for new functionality
+   - Update existing tests when modifying code
+   - Ensure all tests pass before completing task
+
+## Common Linting Rules
+
+1. **Import Rules**
+
+   ```typescript
+   // ❌ Bad - unused imports
+   import { Box, Alert, Paper } from '@mui/material';
+
+   // ✅ Good - only import what you use
+   import { Box, Paper } from '@mui/material';
+   ```
+
+2. **Type Definitions**
+
+   ```typescript
+   // ❌ Bad - missing type definitions
+   function useData(id) {
+     const [data, setData] = useState();
+   }
+
+   // ✅ Good - proper type definitions
+   function useData(id: string) {
+     const [data, setData] = useState<DataType | null>(null);
+   }
+   ```
+
+3. **React Props**
+
+   ```typescript
+   // ❌ Bad - implicit any props
+   function Component(props) {
+     return <div>{props.name}</div>;
+   }
+
+   // ✅ Good - explicit prop types
+   interface ComponentProps {
+     name: string;
+   }
+
+   function Component({ name }: ComponentProps) {
+     return <div>{name}</div>;
+   }
+   ```
+
+## Pre-Commit Checklist
+
+1. Run `npm run lint` to check for linting errors
+2. Fix any TypeScript errors
+3. Ensure all tests pass
+4. Check for unused imports and variables
+5. Verify proper type definitions
+6. Review component prop types

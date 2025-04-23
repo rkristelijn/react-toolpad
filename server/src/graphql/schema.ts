@@ -15,10 +15,10 @@ export const typeDefs = gql`
     type: String!
     industry: String!
     website: String!
-    primaryContactId: ID!
+    primaryContactId: ID
     primaryContact: Contact
     contacts: [Contact!]!
-    billingAddress: Address!
+    billingAddress: Address
   }
 
   type Contact {
@@ -115,7 +115,7 @@ export const typeDefs = gql`
     industry: String!
     website: String!
     primaryContactId: ID
-    billingAddress: AddressInput!
+    billingAddress: AddressInput
   }
 
   input UpdateAccountInput {

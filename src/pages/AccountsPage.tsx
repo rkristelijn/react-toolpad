@@ -1,12 +1,10 @@
-import React from 'react';
+import { Container } from '@mui/material';
+import AccountListView from '../features/accounts/AccountListView';
 
-const AccountsPage: React.FC = () => {
+export default function AccountsPage() {
   return (
-    <div>
-      <h1>Accounts</h1>
-      {/* Account list and management UI will go here */}
-    </div>
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      <AccountListView />
+    </Container>
   );
-};
-
-export default AccountsPage;
+}

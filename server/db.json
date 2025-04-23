@@ -74,38 +74,73 @@
   "accounts": [
     {
       "id": "1",
-      "name": "Acme Corporation",
+      "name": "Tech Innovators Inc",
       "type": "enterprise",
       "industry": "Technology",
-      "website": "https://acme.com"
+      "website": "https://techinnovators.com",
+      "billingAddress": {
+        "street": "123 Innovation Drive",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "USA"
+      }
     },
     {
       "id": "2",
-      "name": "TechCorp Inc",
+      "name": "Global Solutions Ltd",
       "type": "enterprise",
-      "industry": "Software",
-      "website": "https://techcorp.com"
+      "industry": "Consulting",
+      "website": "https://globalsolutions.com",
+      "billingAddress": {
+        "street": "456 Business Park",
+        "city": "New York",
+        "state": "NY",
+        "zip": "10001",
+        "country": "USA"
+      }
     },
     {
       "id": "3",
-      "name": "Digital Solutions Ltd",
+      "name": "Green Energy Co",
       "type": "enterprise",
-      "industry": "Consulting",
-      "website": "https://digitalsolutions.com"
+      "industry": "Energy",
+      "website": "https://greenenergy.com",
+      "billingAddress": {
+        "street": "789 Eco Street",
+        "city": "Portland",
+        "state": "OR",
+        "zip": "97201",
+        "country": "USA"
+      }
     },
     {
       "id": "4",
-      "name": "Innovate Systems",
+      "name": "Healthcare Partners",
       "type": "enterprise",
-      "industry": "Technology",
-      "website": "https://innovatesys.com"
+      "industry": "Healthcare",
+      "website": "https://healthcarepartners.com",
+      "billingAddress": {
+        "street": "321 Medical Center Blvd",
+        "city": "Boston",
+        "state": "MA",
+        "zip": "02114",
+        "country": "USA"
+      }
     },
     {
       "id": "5",
-      "name": "Global Tech Partners",
+      "name": "Creative Studios",
       "type": "enterprise",
-      "industry": "Technology",
-      "website": "https://gtpartners.com"
+      "industry": "Entertainment",
+      "website": "https://creativestudios.com",
+      "billingAddress": {
+        "street": "567 Art Avenue",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zip": "90028",
+        "country": "USA"
+      }
     }
   ],
   "orders": [
