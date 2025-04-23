@@ -195,19 +195,31 @@ export const resolvers = {
     },
 
     createOrder: async (_: unknown, { input }: { input: CreateOrderInput }): Promise<Order> => {
-      const order = {
+      const orderItems = await Promise.all(
+        input.items.map(async item => {
+          const productResponse = await axios.get(`${API_URL}/api/products/${item.productId}`);
+          const product = productResponse.data;
+          return {
+            id: uuidv4(),
+            productId: item.productId,
+            quantity: item.quantity,
+            price: product.price,
+            product,
+          };
+        })
+      );
+
+      const total = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+      const order: Order = {
         id: uuidv4(),
-        customerName: input.customerName,
+        accountId: input.accountId,
         orderDate: new Date().toISOString(),
         status: 'pending',
-        total: 0,
-        items: input.items.map(item => ({
-          id: uuidv4(),
-          productId: item.productId,
-          quantity: item.quantity,
-          price: 0, // Will be updated when we fetch the product
-        })),
+        total,
+        items: orderItems,
       };
+
       const response = await axios.post(`${API_URL}/api/orders`, order);
       return response.data;
     },
@@ -234,6 +246,10 @@ export const resolvers = {
           };
         })
       );
+    },
+    account: async (parent: Order) => {
+      const response = await axios.get(`${API_URL}/api/accounts/${parent.accountId}`);
+      return response.data;
     },
   },
   Account: {

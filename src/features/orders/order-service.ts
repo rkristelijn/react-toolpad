@@ -8,7 +8,13 @@ const GET_ORDERS = gql`
   query GetOrders($sortField: String, $sortDirection: String) {
     orders(sortField: $sortField, sortDirection: $sortDirection) {
       id
-      customerName
+      accountId
+      account {
+        id
+        name
+        type
+        industry
+      }
       orderDate
       status
       total
@@ -30,7 +36,13 @@ const GET_ORDER = gql`
   query GetOrder($id: ID!) {
     order(id: $id) {
       id
-      customerName
+      accountId
+      account {
+        id
+        name
+        type
+        industry
+      }
       orderDate
       status
       total
@@ -52,7 +64,11 @@ const CREATE_ORDER = gql`
   mutation CreateOrder($input: CreateOrderInput!) {
     createOrder(input: $input) {
       id
-      customerName
+      accountId
+      account {
+        id
+        name
+      }
       status
       total
     }
@@ -110,7 +126,7 @@ export function useCreateOrder() {
   });
 
   return {
-    createOrder: (input: { customerName: string; items: Array<{ productId: string; quantity: number }> }) =>
+    createOrder: (input: { accountId: string; items: Array<{ productId: string; quantity: number }> }) =>
       createOrder({ variables: { input } }),
     loading,
   };

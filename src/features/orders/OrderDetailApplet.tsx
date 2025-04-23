@@ -1,4 +1,5 @@
-import { Box, CircularProgress, Alert, Paper, Typography } from '@mui/material';
+import { Box, CircularProgress, Alert, Paper, Typography, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 import { useOrder } from './order-service';
 
@@ -43,7 +44,13 @@ export default function OrderDetailApplet({ orderId }: OrderDetailAppletProps) {
           <strong>Order ID:</strong> {order.id}
         </Typography>
         <Typography>
-          <strong>Customer:</strong> {order.customerName}
+          <strong>Account:</strong>{' '}
+          <Link component={RouterLink} to={`/accounts/${order.accountId}`} color='primary'>
+            {order.account?.name || 'Unknown Account'}
+          </Link>
+        </Typography>
+        <Typography>
+          <strong>Industry:</strong> {order.account?.industry || 'N/A'}
         </Typography>
         <Typography>
           <strong>Date:</strong> {new Date(order.orderDate).toLocaleDateString()}

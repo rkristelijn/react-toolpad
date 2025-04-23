@@ -83,7 +83,6 @@ export default function OrdersListView() {
   return (
     <Box sx={{ p: 2 }}>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-        <Typography variant='h5'>Orders</Typography>
         <Button startIcon={<Refresh />} onClick={handleRefresh}>
           Refresh
         </Button>
@@ -109,7 +108,7 @@ export default function OrdersListView() {
                     {order.id}
                   </Link>
                 </TableCell>
-                <TableCell>{order.customerName}</TableCell>
+                <TableCell>{order.account?.name}</TableCell>
                 <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Typography color={getStatusColor(order.status)}>{order.status}</Typography>

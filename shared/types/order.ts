@@ -1,4 +1,5 @@
 import type { Product } from './product';
+import type { Account } from './account';
 
 export interface OrderItem {
   id: string;
@@ -10,7 +11,8 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
-  customerName: string;
+  accountId: string;
+  account?: Account;
   orderDate: string;
   status: string;
   total: number;
@@ -23,12 +25,11 @@ export interface OrderItemInput {
 }
 
 export interface CreateOrderInput {
-  customerName: string;
+  accountId: string;
   items: OrderItemInput[];
 }
 
 export interface UpdateOrderInput {
-  customerName?: string;
   status?: string;
   items?: OrderItemInput[];
 }

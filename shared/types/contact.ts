@@ -1,4 +1,4 @@
-import type { Address } from './address';
+import type { Address, AddressInput } from './address';
 import type { Account } from './account';
 
 export interface Contact {

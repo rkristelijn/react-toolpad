@@ -107,7 +107,6 @@ export default function OrderListApplet({
   return (
     <Box className={className} sx={sx}>
       <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-        <Typography variant='h5'>Orders</Typography>
         <Button startIcon={<Refresh />} onClick={handleRefresh}>
           Refresh
         </Button>
@@ -133,11 +132,11 @@ export default function OrderListApplet({
               </TableCell>
               <TableCell>
                 <TableSortLabel
-                  active={sortConfig.field === 'customerName'}
-                  direction={sortConfig.field === 'customerName' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('customerName')}
+                  active={sortConfig.field === 'account.name'}
+                  direction={sortConfig.field === 'account.name' ? sortConfig.direction : 'asc'}
+                  onClick={() => handleSortClick('account.name')}
                 >
-                  Customer
+                  Account
                 </TableSortLabel>
               </TableCell>
               <TableCell>
@@ -178,7 +177,11 @@ export default function OrderListApplet({
                     {order.id}
                   </Link>
                 </TableCell>
-                <TableCell>{order.customerName}</TableCell>
+                <TableCell>
+                  <Link component={RouterLink} to={`/accounts/${order.accountId}`} color='primary'>
+                    {order.account?.name || 'Unknown Account'}
+                  </Link>
+                </TableCell>
                 <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                 <TableCell>
                   <Typography color={getStatusColor(order.status)}>{order.status}</Typography>

@@ -1,11 +1,10 @@
-import { PageContainer } from '@toolpad/core/PageContainer';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import OrderListApplet from './OrderListApplet';
 
 // Define types for sort options
-export type SortField = 'id' | 'customerName' | 'orderDate' | 'status' | 'total';
+export type SortField = 'id' | 'account.name' | 'orderDate' | 'status' | 'total';
 export type SortDirection = 'asc' | 'desc';
 
 export interface SortConfig {
@@ -58,9 +57,5 @@ export default function OrderViewController() {
     setSearchParams(params);
   };
 
-  return (
-    <PageContainer title='Orders' breadcrumbs={[{ title: 'Home', path: '/' }, { title: 'Orders' }]}>
-      <OrderListApplet onSort={handleSort} sortConfig={sortConfig} onResetSort={resetSort} />
-    </PageContainer>
-  );
+  return <OrderListApplet onSort={handleSort} sortConfig={sortConfig} onResetSort={resetSort} />;
 }

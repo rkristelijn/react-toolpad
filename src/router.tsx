@@ -5,6 +5,8 @@ import OrderDetailView from './features/orders/OrderDetailView';
 import OrderViewController from './features/orders/OrderViewController';
 import ProductDetailView from './features/products/ProductDetailView';
 import ProductsListView from './features/products/ProductsListView';
+import AccountsPage from './pages/AccountsPage';
+import ContactsPage from './pages/ContactsPage';
 import DashboardPage from './pages/DashboardPage';
 import HomePage from './pages/HomePage';
 import MainLayout from './shared/layouts/MainLayout';
@@ -42,6 +44,14 @@ const router = createBrowserRouter([
           {
             path: '/products/:productId',
             Component: ProductDetailView,
+          },
+          {
+            path: '/contacts',
+            Component: ContactsPage,
+          },
+          {
+            path: '/accounts',
+            Component: AccountsPage,
           },
         ],
       },

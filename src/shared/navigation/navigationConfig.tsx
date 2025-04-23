@@ -1,4 +1,4 @@
-import { Dashboard, Home, Inventory, ShoppingCart } from '@mui/icons-material';
+import { Dashboard, Home, Inventory, ShoppingCart, People, Business } from '@mui/icons-material';
 
 import type { Navigation } from '@toolpad/core';
 
@@ -25,6 +25,16 @@ export const navigationConfig: Navigation = [
     segment: 'products',
     title: 'Products',
     icon: <Inventory />,
+  },
+  {
+    segment: 'contacts',
+    title: 'Contacts',
+    icon: <People />,
+  },
+  {
+    segment: 'accounts',
+    title: 'Accounts',
+    icon: <Business />,
   },
 ];
 

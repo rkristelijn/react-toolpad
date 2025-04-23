@@ -71,10 +71,47 @@
       "stock": 95
     }
   ],
+  "accounts": [
+    {
+      "id": "1",
+      "name": "Acme Corporation",
+      "type": "enterprise",
+      "industry": "Technology",
+      "website": "https://acme.com"
+    },
+    {
+      "id": "2",
+      "name": "TechCorp Inc",
+      "type": "enterprise",
+      "industry": "Software",
+      "website": "https://techcorp.com"
+    },
+    {
+      "id": "3",
+      "name": "Digital Solutions Ltd",
+      "type": "enterprise",
+      "industry": "Consulting",
+      "website": "https://digitalsolutions.com"
+    },
+    {
+      "id": "4",
+      "name": "Innovate Systems",
+      "type": "enterprise",
+      "industry": "Technology",
+      "website": "https://innovatesys.com"
+    },
+    {
+      "id": "5",
+      "name": "Global Tech Partners",
+      "type": "enterprise",
+      "industry": "Technology",
+      "website": "https://gtpartners.com"
+    }
+  ],
   "orders": [
     {
       "id": "1",
-      "customerName": "John Smith",
+      "accountId": "1",
       "orderDate": "2024-03-25T08:00:00Z",
       "status": "completed",
       "total": 1499.98,
@@ -105,7 +142,7 @@
     },
     {
       "id": "2",
-      "customerName": "Emma Wilson",
+      "accountId": "2",
       "orderDate": "2024-03-25T09:15:00Z",
       "status": "processing",
       "total": 599.98,
@@ -120,23 +157,12 @@
             "name": "Wireless Headphones",
             "price": 199.99
           }
-        },
-        {
-          "id": "2-2",
-          "productId": "105",
-          "quantity": 1,
-          "price": 79.99,
-          "product": {
-            "id": "105",
-            "name": "Wireless Mouse",
-            "price": 79.99
-          }
         }
       ]
     },
     {
       "id": "3",
-      "customerName": "Michael Brown",
+      "accountId": "3",
       "orderDate": "2024-03-25T10:30:00Z",
       "status": "pending",
       "total": 299.99,
@@ -156,7 +182,7 @@
     },
     {
       "id": "4",
-      "customerName": "Sarah Johnson",
+      "accountId": "4",
       "orderDate": "2024-03-25T11:45:00Z",
       "status": "completed",
       "total": 499.99,
@@ -176,7 +202,7 @@
     },
     {
       "id": "5",
-      "customerName": "David Lee",
+      "accountId": "5",
       "orderDate": "2024-03-25T13:00:00Z",
       "status": "cancelled",
       "total": 1579.98,
@@ -191,23 +217,12 @@
             "name": "Premium Laptop",
             "price": 1299.99
           }
-        },
-        {
-          "id": "5-2",
-          "productId": "102",
-          "quantity": 1,
-          "price": 199.99,
-          "product": {
-            "id": "102",
-            "name": "Wireless Headphones",
-            "price": 199.99
-          }
         }
       ]
     },
     {
       "id": "6",
-      "customerName": "Lisa Taylor",
+      "accountId": "1",
       "orderDate": "2024-03-25T14:15:00Z",
       "status": "processing",
       "total": 879.97,
@@ -238,7 +253,7 @@
     },
     {
       "id": "7",
-      "customerName": "James Anderson",
+      "accountId": "1",
       "orderDate": "2024-03-25T15:30:00Z",
       "status": "pending",
       "total": 699.98,
@@ -269,7 +284,7 @@
     },
     {
       "id": "8",
-      "customerName": "Emily Davis",
+      "accountId": "1",
       "orderDate": "2024-03-25T16:45:00Z",
       "status": "completed",
       "total": 1379.98,
@@ -300,7 +315,7 @@
     },
     {
       "id": "9",
-      "customerName": "Robert Wilson",
+      "accountId": "1",
       "orderDate": "2024-03-25T18:00:00Z",
       "status": "processing",
       "total": 579.98,
@@ -331,7 +346,7 @@
     },
     {
       "id": "10",
-      "customerName": "Jennifer Moore",
+      "accountId": "1",
       "orderDate": "2024-03-25T19:15:00Z",
       "status": "pending",
       "total": 1799.97,
@@ -362,7 +377,7 @@
     },
     {
       "id": "11",
-      "customerName": "Thomas Brown",
+      "accountId": "1",
       "orderDate": "2024-03-25T20:30:00Z",
       "status": "completed",
       "total": 879.97,
@@ -393,7 +408,7 @@
     },
     {
       "id": "12",
-      "customerName": "Maria Garcia",
+      "accountId": "1",
       "orderDate": "2024-03-25T21:45:00Z",
       "status": "processing",
       "total": 699.98,
@@ -424,7 +439,7 @@
     },
     {
       "id": "13",
-      "customerName": "William Turner",
+      "accountId": "1",
       "orderDate": "2024-03-25T23:00:00Z",
       "status": "pending",
       "total": 1579.98,
@@ -455,7 +470,7 @@
     },
     {
       "id": "14",
-      "customerName": "Sophie Martinez",
+      "accountId": "1",
       "orderDate": "2024-03-26T00:15:00Z",
       "status": "cancelled",
       "total": 879.97,
@@ -486,7 +501,7 @@
     },
     {
       "id": "15",
-      "customerName": "Daniel White",
+      "accountId": "1",
       "orderDate": "2024-03-26T01:30:00Z",
       "status": "completed",
       "total": 1379.98,
@@ -517,7 +532,7 @@
     },
     {
       "id": "e1a98e53-a317-4dc2-b7e5-09a5188eae9f",
-      "customerName": "Bob Smith",
+      "accountId": "1",
       "orderDate": "2025-04-22T17:34:09.354Z",
       "status": "pending",
       "total": 0,
@@ -532,7 +547,7 @@
     },
     {
       "id": "d81207a6-60ae-49a1-a100-54ef5d911c4e",
-      "customerName": "Bob Smith",
+      "accountId": "1",
       "orderDate": "2025-04-22T17:34:28.772Z",
       "status": "pending",
       "total": 0,
@@ -546,7 +561,7 @@
       ]
     },
     {
-      "customerName": "Alice Johnson",
+      "accountId": "1",
       "orderDate": "2024-03-20T10:00:00Z",
       "status": "pending",
       "total": 299.99,
@@ -558,173 +573,6 @@
         }
       ],
       "id": "yaj3pS6"
-    }
-  ],
-  "accounts": [
-    {
-      "id": "1",
-      "name": "Acme Corporation Updated",
-      "type": "enterprise",
-      "industry": "Software",
-      "website": "https://techcorp.com",
-      "primaryContactId": "1",
-      "billingAddress": {
-        "street": "123 Innovation Drive",
-        "city": "San Francisco",
-        "state": "CA",
-        "zip": "94105",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "2",
-      "name": "Global Manufacturing Inc",
-      "type": "enterprise",
-      "industry": "Manufacturing",
-      "website": "https://globalmfg.com",
-      "primaryContactId": "2",
-      "billingAddress": {
-        "street": "456 Industrial Blvd",
-        "city": "Chicago",
-        "state": "IL",
-        "zip": "60601",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "3",
-      "name": "HealthCare Plus",
-      "type": "enterprise",
-      "industry": "Healthcare",
-      "website": "https://healthcareplus.org",
-      "primaryContactId": "3",
-      "billingAddress": {
-        "street": "789 Medical Center Way",
-        "city": "Boston",
-        "state": "MA",
-        "zip": "02115",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "4",
-      "name": "Retail Dynamics",
-      "type": "enterprise",
-      "industry": "Retail",
-      "website": "https://retaildynamics.com",
-      "primaryContactId": "4",
-      "billingAddress": {
-        "street": "321 Commerce Street",
-        "city": "Seattle",
-        "state": "WA",
-        "zip": "98101",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "5",
-      "name": "EcoEnergy Solutions",
-      "type": "enterprise",
-      "industry": "Energy",
-      "website": "https://ecoenergy.com",
-      "primaryContactId": "5",
-      "billingAddress": {
-        "street": "567 Green Avenue",
-        "city": "Austin",
-        "state": "TX",
-        "zip": "78701",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "6",
-      "name": "FinTech Innovations",
-      "type": "enterprise",
-      "industry": "Financial Services",
-      "website": "https://fintechinno.com",
-      "primaryContactId": "6",
-      "billingAddress": {
-        "street": "890 Wall Street",
-        "city": "New York",
-        "state": "NY",
-        "zip": "10005",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "7",
-      "name": "Creative Design Studio",
-      "type": "small_business",
-      "industry": "Creative Services",
-      "website": "https://creativedesign.studio",
-      "primaryContactId": "7",
-      "billingAddress": {
-        "street": "234 Arts District",
-        "city": "Portland",
-        "state": "OR",
-        "zip": "97201",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "8",
-      "name": "Cloud Services Pro",
-      "type": "enterprise",
-      "industry": "Cloud Computing",
-      "website": "https://cloudservicespro.com",
-      "primaryContactId": "8",
-      "billingAddress": {
-        "street": "432 Tech Park",
-        "city": "Denver",
-        "state": "CO",
-        "zip": "80202",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "9",
-      "name": "Smart Education Systems",
-      "type": "non_profit",
-      "industry": "Education",
-      "website": "https://smartedu.org",
-      "primaryContactId": "9",
-      "billingAddress": {
-        "street": "765 Campus Drive",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30303",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "10",
-      "name": "Logistics Master",
-      "type": "enterprise",
-      "industry": "Logistics",
-      "website": "https://logisticsmaster.com",
-      "primaryContactId": "10",
-      "billingAddress": {
-        "street": "987 Transport Lane",
-        "city": "Miami",
-        "state": "FL",
-        "zip": "33101",
-        "country": "USA"
-      }
-    },
-    {
-      "id": "11",
-      "name": "Research Innovations Lab",
-      "type": "research",
-      "industry": "Research & Development",
-      "website": "https://researchlab.org",
-      "primaryContactId": "11",
-      "billingAddress": {
-        "street": "543 Science Park",
-        "city": "Cambridge",
-        "state": "MA",
-        "zip": "02142",
-        "country": "USA"
-      }
     }
   ],
   "contacts": [

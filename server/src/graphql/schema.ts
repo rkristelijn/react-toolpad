@@ -43,7 +43,8 @@ export const typeDefs = gql`
 
   type Order {
     id: ID!
-    customerName: String!
+    accountId: ID!
+    account: Account!
     orderDate: String!
     status: String!
     total: Float!
@@ -147,12 +148,11 @@ export const typeDefs = gql`
   }
 
   input CreateOrderInput {
-    customerName: String!
+    accountId: ID!
     items: [OrderItemInput!]!
   }
 
   input UpdateOrderInput {
-    customerName: String
     status: String
     items: [OrderItemInput!]
   }
