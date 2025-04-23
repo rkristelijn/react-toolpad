@@ -68,9 +68,17 @@ export const resolvers = {
     },
 
     // Contact queries
-    contacts: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
+    contacts: async (
+      _: unknown,
+      {
+        sortField,
+        sortDirection,
+        page = 1,
+        pageSize = 10,
+      }: { sortField?: string; sortDirection?: string; page?: number; pageSize?: number }
+    ) => {
       const response = await axios.get(`${API_URL}/api/contacts`);
-      const contacts = response.data as Contact[];
+      let contacts = response.data as Contact[];
 
       if (sortField) {
         const direction = sortDirection === 'desc' ? -1 : 1;
@@ -84,7 +92,15 @@ export const resolvers = {
         });
       }
 
-      return contacts;
+      const total = contacts.length;
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      contacts = contacts.slice(start, end);
+
+      return {
+        items: contacts,
+        total,
+      };
     },
     contact: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/contacts/${id}`);
@@ -281,8 +297,23 @@ export const resolvers = {
   },
   Contact: {
     account: async (contact: Contact) => {
-      const response = await axios.get(`${API_URL}/api/accounts/${contact.accountId}`);
-      return response.data;
+      try {
+        const response = await axios.get(`${API_URL}/api/accounts/${contact.accountId}`);
+        return response.data;
+      } catch (error) {
+        console.error(`Failed to fetch account for contact ${contact.id}:`, error);
+        // Return a minimal account object to prevent GraphQL errors
+        return {
+          id: contact.accountId,
+          name: 'Unknown Account',
+          type: 'Unknown',
+          industry: 'Unknown',
+          website: '',
+          primaryContactId: null,
+          contacts: [],
+          billingAddress: null,
+        };
+      }
     },
   },
 };

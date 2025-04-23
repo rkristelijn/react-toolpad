@@ -38,6 +38,11 @@ export const typeDefs = gql`
     address: Address!
   }
 
+  type ContactsResponse {
+    items: [Contact!]!
+    total: Int!
+  }
+
   type OrderItem {
     id: ID!
     productId: ID!
@@ -77,7 +82,7 @@ export const typeDefs = gql`
     accountsByIndustry(industry: String!): [Account!]!
 
     # Contact queries
-    contacts(sortField: String, sortDirection: String): [Contact!]!
+    contacts(sortField: String, sortDirection: String, page: Int, pageSize: Int): ContactsResponse!
     contact(id: ID!): Contact
     contactsByAccount(accountId: ID!): [Contact!]!
     contactsByTitle(title: String!): [Contact!]!

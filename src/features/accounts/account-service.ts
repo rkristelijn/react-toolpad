@@ -1,8 +1,8 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
 import type { AccountSortField as SortField } from './AccountListView';
-import type { SortDirection } from '../../shared/providers/ListViewContext';
 import type { Account } from '../../../shared/types';
+import type { SortDirection } from '../../shared/providers/ListViewContext';
 
 interface GetAccountsResponse {
   accounts: {
