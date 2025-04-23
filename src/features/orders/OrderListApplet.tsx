@@ -1,45 +1,28 @@
-import { Refresh } from '@mui/icons-material';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  TableSortLabel,
-} from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Box, Paper } from '@mui/material';
+import { useCallback, useState } from 'react';
 
 import type { SxProps, Theme } from '@mui/material/styles';
 
+import { OrderList } from './OrderList';
+import { OrderListToolbar } from './OrderListToolbar';
 import { useOrders, useUpdateOrder, useDeleteOrder } from './order-service';
-
-import type { SortConfig, SortField } from './OrderViewController';
+import { useListView } from '../../shared/providers/ListViewContext';
 import type { Order } from '../../../shared/types';
+import type { OrderSortField } from './types';
 
 export interface OrderListAppletProps {
   className?: string;
   sx?: SxProps<Theme>;
-  onSort?: (field: SortField) => void;
-  sortConfig?: SortConfig;
-  onResetSort?: () => void;
 }
 
-export default function OrderListApplet({
-  className,
-  sx,
-  onSort,
-  sortConfig = { field: null, direction: 'asc' },
-  onResetSort,
-}: OrderListAppletProps) {
-  const { orders, loading, error, refetch } = useOrders(sortConfig.field, sortConfig.direction);
+export default function OrderListApplet({ className, sx }: OrderListAppletProps) {
+  const { selectedItemId, onSelectItem, sortField, sortDirection, onSortFieldChange, onSortDirectionChange } = useListView<
+    OrderSortField,
+    Order
+  >();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const { orders, totalCount, loading, error, refetch } = useOrders(sortField, sortDirection, page);
   const { updateOrder } = useUpdateOrder();
   const { deleteOrder } = useDeleteOrder();
 
@@ -51,19 +34,32 @@ export default function OrderListApplet({
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'warning.main';
-      case 'processing':
-        return 'info.main';
-      case 'completed':
-        return 'success.main';
-      case 'cancelled':
-        return 'error.main';
-      default:
-        return 'text.primary';
-    }
+  const handleSortChange = useCallback(
+    (field: OrderSortField) => {
+      if (field === sortField) {
+        onSortDirectionChange(sortDirection === 'asc' ? 'desc' : 'asc');
+      } else {
+        onSortFieldChange(field);
+      }
+      setPage(1); // Reset to first page when sorting changes
+    },
+    [sortField, sortDirection, onSortFieldChange, onSortDirectionChange]
+  );
+
+  const handleSelectOrder = useCallback(
+    (order: Order) => {
+      onSelectItem(order);
+    },
+    [onSelectItem]
+  );
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setPage(1); // Reset to first page when page size changes
   };
 
   const handleCancelOrder = async (orderId: string) => {
@@ -82,129 +78,28 @@ export default function OrderListApplet({
     }
   };
 
-  const handleSortClick = (field: SortField) => {
-    if (onSort) {
-      onSort(field);
-    }
-  };
-
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Alert severity='error'>Error loading orders: {error.message}</Alert>
-      </Box>
-    );
+  if (loading || error) {
+    return null;
   }
 
   return (
-    <Box className={className} sx={sx}>
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-        <Button startIcon={<Refresh />} onClick={handleRefresh}>
-          Refresh
-        </Button>
-        {sortConfig.field && (
-          <Button size='small' onClick={onResetSort}>
-            Clear Sorting
-          </Button>
-        )}
-      </Box>
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.field === 'id'}
-                  direction={sortConfig.field === 'id' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('id')}
-                >
-                  Order ID
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.field === 'account.name'}
-                  direction={sortConfig.field === 'account.name' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('account.name')}
-                >
-                  Account
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.field === 'orderDate'}
-                  direction={sortConfig.field === 'orderDate' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('orderDate')}
-                >
-                  Date
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>
-                <TableSortLabel
-                  active={sortConfig.field === 'status'}
-                  direction={sortConfig.field === 'status' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('status')}
-                >
-                  Status
-                </TableSortLabel>
-              </TableCell>
-              <TableCell align='right'>
-                <TableSortLabel
-                  active={sortConfig.field === 'total'}
-                  direction={sortConfig.field === 'total' ? sortConfig.direction : 'asc'}
-                  onClick={() => handleSortClick('total')}
-                >
-                  Total
-                </TableSortLabel>
-              </TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order: Order) => (
-              <TableRow key={order.id}>
-                <TableCell>
-                  <Link component={RouterLink} to={`/orders/${order.id}`} color='primary'>
-                    {order.id}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Link component={RouterLink} to={`/accounts/${order.accountId}`} color='primary'>
-                    {order.account?.name || 'Unknown Account'}
-                  </Link>
-                </TableCell>
-                <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Typography color={getStatusColor(order.status)}>{order.status}</Typography>
-                </TableCell>
-                <TableCell align='right'>${order.total.toFixed(2)}</TableCell>
-                <TableCell>
-                  <Button
-                    size='small'
-                    color='warning'
-                    onClick={() => handleCancelOrder(order.id)}
-                    disabled={order.status === 'cancelled' || order.status === 'completed'}
-                  >
-                    Cancel
-                  </Button>
-                  <Button size='small' color='error' onClick={() => handleDeleteOrder(order.id)}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <Box component={Paper} className={className} sx={sx}>
+      <OrderListToolbar onRefresh={handleRefresh} />
+      <OrderList
+        orders={orders}
+        totalCount={totalCount}
+        page={page}
+        pageSize={pageSize}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        selectedOrderId={selectedItemId}
+        onSelectOrder={handleSelectOrder}
+        sortField={sortField}
+        sortDirection={sortDirection}
+        onSortChange={handleSortChange}
+        onCancelOrder={handleCancelOrder}
+        onDeleteOrder={handleDeleteOrder}
+      />
     </Box>
   );
 }

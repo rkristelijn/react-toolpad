@@ -1,53 +1,60 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
-import type { SortField, SortDirection } from './OrderViewController';
-import type { UpdateOrderInput } from '../../../shared/types';
+import type { SortDirection } from '../../shared/providers/ListViewContext';
+import type { UpdateOrderInput, Order } from '../../../shared/types';
+import type { OrderSortField } from './types';
+
+interface GetOrdersResponse {
+  orders: {
+    items: Order[];
+    total: number;
+  };
+}
+
+interface GetOrdersVariables {
+  sortField?: OrderSortField | null;
+  sortDirection?: SortDirection;
+  page?: number;
+  pageSize?: number;
+}
 
 // GraphQL Queries and Mutations
-const GET_ORDERS = gql`
-  query GetOrders($sortField: String, $sortDirection: String) {
-    orders(sortField: $sortField, sortDirection: $sortDirection) {
-      id
-      accountId
-      account {
-        id
-        name
-        type
-        industry
-      }
-      orderDate
-      status
-      total
+export const GET_ORDERS = gql`
+  query GetOrders($sortField: String, $sortDirection: String, $page: Int) {
+    orders(sortField: $sortField, sortDirection: $sortDirection, page: $page) {
       items {
         id
-        quantity
-        price
-        product {
+        accountId
+        orderDate
+        status
+        total
+        account {
           id
           name
-          price
         }
       }
+      total
     }
   }
 `;
 
-const GET_ORDER = gql`
+export const GET_ORDER = gql`
   query GetOrder($id: ID!) {
     order(id: $id) {
       id
       accountId
+      orderDate
+      status
+      total
       account {
         id
         name
         type
         industry
       }
-      orderDate
-      status
-      total
-      items {
+      orderItems {
         id
+        productId
         quantity
         price
         product {
@@ -60,22 +67,7 @@ const GET_ORDER = gql`
   }
 `;
 
-const CREATE_ORDER = gql`
-  mutation CreateOrder($input: CreateOrderInput!) {
-    createOrder(input: $input) {
-      id
-      accountId
-      account {
-        id
-        name
-      }
-      status
-      total
-    }
-  }
-`;
-
-const UPDATE_ORDER = gql`
+export const UPDATE_ORDER = gql`
   mutation UpdateOrder($id: ID!, $input: UpdateOrderInput!) {
     updateOrder(id: $id, input: $input) {
       id
@@ -84,24 +76,24 @@ const UPDATE_ORDER = gql`
   }
 `;
 
-const DELETE_ORDER = gql`
+export const DELETE_ORDER = gql`
   mutation DeleteOrder($id: ID!) {
     deleteOrder(id: $id)
   }
 `;
 
-// Custom hooks for orders
-export function useOrders(sortField?: SortField | null, sortDirection?: SortDirection) {
-  const { data, loading, error, refetch } = useQuery(GET_ORDERS, {
+export function useOrders(sortField?: OrderSortField | null, sortDirection?: SortDirection, page: number = 1) {
+  const { data, loading, error, refetch } = useQuery<GetOrdersResponse, GetOrdersVariables>(GET_ORDERS, {
     variables: {
-      sortField: sortField || undefined,
-      sortDirection: sortDirection || undefined,
+      sortField,
+      sortDirection,
+      page: page - 1, // Convert to 0-based for the API
     },
-    fetchPolicy: 'network-only', // Don't use cache when sorting changes
   });
 
   return {
-    orders: data?.orders || [],
+    orders: data?.orders.items || [],
+    totalCount: data?.orders.total || 0,
     loading,
     error,
     refetch,
@@ -113,6 +105,7 @@ export function useOrder(id: string) {
     variables: { id },
     skip: !id,
   });
+
   return {
     order: data?.order,
     loading,
@@ -120,41 +113,39 @@ export function useOrder(id: string) {
   };
 }
 
-export function useCreateOrder() {
-  const [createOrder, { loading }] = useMutation(CREATE_ORDER, {
-    refetchQueries: [{ query: GET_ORDERS }],
-  });
-
-  return {
-    createOrder: (input: { accountId: string; items: Array<{ productId: string; quantity: number }> }) =>
-      createOrder({ variables: { input } }),
-    loading,
-  };
-}
-
 export function useUpdateOrder() {
-  const [updateOrderMutation] = useMutation(UPDATE_ORDER, {
-    refetchQueries: ['GetOrders', 'GetOrder'],
-  });
+  const [updateOrderMutation] = useMutation(UPDATE_ORDER);
 
   const updateOrder = async (id: string, input: UpdateOrderInput) => {
-    await updateOrderMutation({
-      variables: { id, input },
-    });
+    try {
+      await updateOrderMutation({
+        variables: { id, input },
+        refetchQueries: ['GetOrders', 'GetOrder'],
+      });
+      return true;
+    } catch (error) {
+      console.error('Error updating order:', error);
+      return false;
+    }
   };
 
   return { updateOrder };
 }
 
 export function useDeleteOrder() {
-  const [deleteOrderMutation] = useMutation(DELETE_ORDER, {
-    refetchQueries: ['GetOrders'],
-  });
+  const [deleteOrderMutation] = useMutation(DELETE_ORDER);
 
   const deleteOrder = async (id: string) => {
-    await deleteOrderMutation({
-      variables: { id },
-    });
+    try {
+      await deleteOrderMutation({
+        variables: { id },
+        refetchQueries: ['GetOrders'],
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      return false;
+    }
   };
 
   return { deleteOrder };

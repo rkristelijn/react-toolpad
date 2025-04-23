@@ -1,137 +1,44 @@
-import { Refresh } from '@mui/icons-material';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Link,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
+import { Stack } from '@mui/material';
+import { useEffect } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-import { useOrders, useUpdateOrder, useDeleteOrder } from './order-service';
-
+import OrderListApplet from './OrderListApplet';
+import { client } from '../../shared/providers/apollo';
+import { ListViewProvider } from '../../shared/providers/ListViewContext';
 import type { Order } from '../../../shared/types';
+import type { OrderSortField } from './types';
 
 export default function OrdersListView() {
-  const { orders, loading, error, refetch } = useOrders();
-  const { updateOrder } = useUpdateOrder();
-  const { deleteOrder } = useDeleteOrder();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+  const selectedOrderId = searchParams.get('selectedOrder') || undefined;
 
-  const handleRefresh = async () => {
-    try {
-      await refetch();
-    } catch (err) {
-      console.error('Failed to refresh orders:', err);
+  // Reset URL parameters when coming from a detail view
+  useEffect(() => {
+    const fromDetailView = location.key === 'default';
+    if (fromDetailView) {
+      setSearchParams({});
     }
-  };
+  }, [location, setSearchParams]);
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return 'warning.main';
-      case 'processing':
-        return 'info.main';
-      case 'completed':
-        return 'success.main';
-      case 'cancelled':
-        return 'error.main';
-      default:
-        return 'text.primary';
+  const handleSelectOrder = (order: Order | null) => {
+    const params = new URLSearchParams(searchParams);
+    if (order?.id) {
+      params.set('selectedOrder', order.id);
+    } else {
+      params.delete('selectedOrder');
     }
+    setSearchParams(params);
   };
-
-  const handleCancelOrder = async (orderId: string) => {
-    try {
-      await updateOrder(orderId, { status: 'cancelled' });
-    } catch (err) {
-      console.error('Failed to cancel order:', err);
-    }
-  };
-
-  const handleDeleteOrder = async (orderId: string) => {
-    try {
-      await deleteOrder(orderId);
-    } catch (err) {
-      console.error('Failed to delete order:', err);
-    }
-  };
-
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Box sx={{ p: 2 }}>
-        <Alert severity='error'>Error loading orders: {error.message}</Alert>
-      </Box>
-    );
-  }
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
-        <Button startIcon={<Refresh />} onClick={handleRefresh}>
-          Refresh
-        </Button>
-      </Box>
-
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Customer</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell align='right'>Total</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {orders.map((order: Order) => (
-              <TableRow key={order.id}>
-                <TableCell>
-                  <Link component={RouterLink} to={`/orders/${order.id}`} color='primary'>
-                    {order.id}
-                  </Link>
-                </TableCell>
-                <TableCell>{order.account?.name}</TableCell>
-                <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <Typography color={getStatusColor(order.status)}>{order.status}</Typography>
-                </TableCell>
-                <TableCell align='right'>${order.total.toFixed(2)}</TableCell>
-                <TableCell>
-                  <Button
-                    size='small'
-                    color='warning'
-                    onClick={() => handleCancelOrder(order.id)}
-                    disabled={order.status === 'cancelled' || order.status === 'completed'}
-                  >
-                    Cancel
-                  </Button>
-                  <Button size='small' color='error' onClick={() => handleDeleteOrder(order.id)}>
-                    Delete
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+    <ApolloProvider client={client}>
+      <Stack direction='column' height='100%' spacing={2}>
+        <ListViewProvider<OrderSortField, Order> onSelectItem={handleSelectOrder} selectedItemId={selectedOrderId}>
+          <OrderListApplet />
+        </ListViewProvider>
+      </Stack>
+    </ApolloProvider>
   );
 }

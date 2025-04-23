@@ -117,17 +117,30 @@ export const resolvers = {
       return contacts.filter(contact => contact.title === title);
     },
 
-    orders: async (_: unknown, { sortField, sortDirection }: { sortField?: string; sortDirection?: string }) => {
+    orders: async (_: unknown, { sortField, sortDirection, page = 0 }: { sortField?: string; sortDirection?: string; page?: number }) => {
+      const pageSize = 5; // Fixed page size
       const response = await axios.get(`${API_URL}/api/orders`);
-      const orders = response.data as Order[];
+      let orders = response.data as Order[];
 
       // Apply sorting if parameters are provided
       if (sortField) {
         const direction = sortDirection === 'desc' ? -1 : 1;
 
+        // Handle nested field sorting (e.g., 'account.name')
         orders.sort((a: Order, b: Order) => {
-          const aValue = a[sortField as keyof Order];
-          const bValue = b[sortField as keyof Order];
+          const fields = sortField.split('.');
+          let aValue: any = a;
+          let bValue: any = b;
+
+          // Navigate through nested fields
+          for (const field of fields) {
+            aValue = aValue?.[field];
+            bValue = bValue?.[field];
+          }
+
+          if (aValue === null || aValue === undefined || bValue === null || bValue === undefined) {
+            return 0;
+          }
 
           if (typeof aValue === 'string' && typeof bValue === 'string') {
             return direction * aValue.localeCompare(bValue);
@@ -141,7 +154,14 @@ export const resolvers = {
         });
       }
 
-      return orders;
+      // Apply pagination (using 0-based page number)
+      const skip = page * pageSize;
+      const items = orders.slice(skip, skip + pageSize);
+
+      return {
+        items,
+        total: orders.length,
+      };
     },
     order: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/orders/${id}`);

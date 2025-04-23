@@ -61,6 +61,11 @@ export const typeDefs = gql`
     items: [OrderItem!]!
   }
 
+  type OrdersResponse {
+    items: [Order!]!
+    total: Int!
+  }
+
   type Product {
     id: ID!
     name: String!
@@ -87,8 +92,8 @@ export const typeDefs = gql`
     contactsByAccount(accountId: ID!): [Contact!]!
     contactsByTitle(title: String!): [Contact!]!
 
-    # Existing queries
-    orders(sortField: String, sortDirection: String): [Order!]!
+    # Order queries
+    orders(sortField: String, sortDirection: String, page: Int): OrdersResponse!
     order(id: ID!): Order
     products(sortField: String, sortDirection: String, page: Int, pageSize: Int): ProductsResponse!
     product(id: ID!): Product
@@ -105,7 +110,7 @@ export const typeDefs = gql`
     updateContact(id: ID!, input: UpdateContactInput!): Contact!
     deleteContact(id: ID!): Boolean!
 
-    # Existing mutations
+    # Order mutations
     createOrder(input: CreateOrderInput!): Order!
     updateOrder(id: ID!, input: UpdateOrderInput!): Order!
     deleteOrder(id: ID!): Boolean!
