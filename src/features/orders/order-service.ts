@@ -1,8 +1,8 @@
 import { gql, useQuery, useMutation } from '@apollo/client';
 
-import type { SortDirection } from '../../shared/providers/ListViewContext';
-import type { UpdateOrderInput, Order } from '../../../shared/types';
 import type { OrderSortField } from './types';
+import type { UpdateOrderInput, Order } from '../../../shared/types';
+import type { SortDirection } from '../../shared/providers/ListViewContext';
 
 interface GetOrdersResponse {
   orders: {
@@ -52,7 +52,7 @@ export const GET_ORDER = gql`
         type
         industry
       }
-      orderItems {
+      items {
         id
         productId
         quantity
