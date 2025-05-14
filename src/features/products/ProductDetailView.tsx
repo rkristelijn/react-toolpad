@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import ProductDetailApplet from './ProductDetailApplet';
+import ProductOrderListApplet from './ProductOrderListApplet';
 
 export default function ProductDetailView() {
   const { productId } = useParams<{ productId: string }>();
@@ -45,6 +46,7 @@ export default function ProductDetailView() {
     >
       <Box sx={{ p: 2 }}>
         <ProductDetailApplet productId={productId} />
+        {productId && <ProductOrderListApplet productId={productId} />}
       </Box>
     </PageContainer>
   );

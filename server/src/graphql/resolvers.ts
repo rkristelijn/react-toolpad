@@ -120,7 +120,7 @@ export const resolvers = {
     orders: async (_: unknown, { sortField, sortDirection, page = 0 }: { sortField?: string; sortDirection?: string; page?: number }) => {
       const pageSize = 5; // Fixed page size
       const response = await axios.get(`${API_URL}/api/orders`);
-      let orders = response.data as Order[];
+      const orders = response.data as Order[];
 
       // Apply sorting if parameters are provided
       if (sortField) {
@@ -206,6 +206,21 @@ export const resolvers = {
     product: async (_: unknown, { id }: { id: string }) => {
       const response = await axios.get(`${API_URL}/api/products/${id}`);
       return response.data;
+    },
+    ordersByProduct: async (_: unknown, { productId }: { productId: string }) => {
+      const response = await axios.get(`${API_URL}/api/orders`);
+      const orders = response.data as Order[];
+      return orders.filter(order => Array.isArray(order.items) && order.items.some(item => item.productId === productId));
+    },
+    orderItemsByProduct: async (_: unknown, { productId }: { productId: string }) => {
+      const response = await axios.get(`${API_URL}/api/orders`);
+      const orders = response.data as Order[];
+      // Flatten all order items from all orders, filter by productId
+      return orders.flatMap(order =>
+        Array.isArray(order.items)
+          ? order.items.filter(item => item.productId === productId).map(item => ({ ...item, orderId: order.id }))
+          : []
+      );
     },
   },
   Mutation: {

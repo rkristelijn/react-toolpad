@@ -49,6 +49,7 @@ export const typeDefs = gql`
     quantity: Int!
     price: Float!
     product: Product
+    orderId: ID!
   }
 
   type Order {
@@ -97,6 +98,8 @@ export const typeDefs = gql`
     order(id: ID!): Order
     products(sortField: String, sortDirection: String, page: Int, pageSize: Int): ProductsResponse!
     product(id: ID!): Product
+    ordersByProduct(productId: ID!): [Order!]!
+    orderItemsByProduct(productId: ID!): [OrderItem!]!
   }
 
   type Mutation {
